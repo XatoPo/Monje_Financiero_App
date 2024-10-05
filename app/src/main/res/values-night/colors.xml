@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="background">#1a202c</color>
+    <color name="text">#f9fafb</color>
+    <color name="primary">#38a169</color>
+    <color name="primary_bg">#38a169</color>
+    <color name="primary_hover">#2f855a</color>
+    <color name="secondary">#1d4ed8</color>
+    <color name="secondary_hover">#0c4a6e</color>
+    <color name="accent">#805ad5</color>
+    <color name="accent_hover">#6b46c1</color>
+    <color name="card">#2d3748</color>
+    <color name="card_hover">#4a5568</color>
 </resources>
