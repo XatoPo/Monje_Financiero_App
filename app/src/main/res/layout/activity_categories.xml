@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CategoriesActivity"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvCategoriesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registro de Categorías"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+    <TextInputLayout
+        android:id="@+id/inputLayoutCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Nombre de la categoría"
+        app:layout_constraintTop_toBottomOf="@id/tvCategoriesTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextInputEditText
+            android:id="@+id/etCategoryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvCategoryColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar color"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutCategoryName"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <GridLayout
+        android:id="@+id/gridColors"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvCategoryColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:columnCount="5"
+        android:rowCount="3">
+
+        <!-- Color buttons will be added dynamically in the Activity -->
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/tvIconSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar ícono"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/gridColors"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ScrollView
+        android:id="@+id/iconScrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvIconSelection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <!-- Icon buttons will be added dynamically in the Activity -->
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnAddCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Agregar categoría"
+        app:layout_constraintTop_toBottomOf="@id/iconScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

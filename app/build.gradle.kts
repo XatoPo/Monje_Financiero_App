@@ -40,6 +40,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.cardview)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
+    implementation(libs.androidx.cardview)
+
 }
 

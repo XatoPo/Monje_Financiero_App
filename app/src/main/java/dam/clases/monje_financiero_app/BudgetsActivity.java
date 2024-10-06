@@ -1,2 +1,6 @@
-package dam.clases.monje_financiero_app;public class BudgetsActivity {
+package dam.clases.monje_financiero_app;
+
+import android.app.Activity;
+
+public class BudgetsActivity extends Activity {
 }

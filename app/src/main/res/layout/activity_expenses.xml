@@ -1,6 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExpensesActivity"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvExpensesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registro de Gastos"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+    <!-- Campo de texto para la descripción del gasto -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayoutDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Descripción del gasto"
+        app:layout_constraintTop_toBottomOf="@id/tvExpensesTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo de texto para el monto del gasto -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayoutAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Monto del gasto"
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Selección de categoría -->
+    <TextView
+        android:id="@+id/tvCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Categoría del gasto"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/btnSelectCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar categoría"
+        app:layout_constraintTop_toBottomOf="@id/tvCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Selección de fecha -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Fecha del gasto"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSelectCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/btnSelectDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar fecha"
+        app:layout_constraintTop_toBottomOf="@id/tvDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Switch para gasto recurrente -->
+    <Switch
+        android:id="@+id/switchRecurring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gasto recurrente"
+        app:layout_constraintTop_toBottomOf="@id/btnSelectDate"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Botón para guardar el gasto -->
+    <Button
+        android:id="@+id/btnSaveExpense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Guardar gasto"
+        app:layout_constraintTop_toBottomOf="@id/switchRecurring"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

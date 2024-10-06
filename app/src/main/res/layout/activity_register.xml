@@ -1,6 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTitleRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registro de Usuario"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+    <!-- Nombre de usuario -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputUsername"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de usuario"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Correo electrónico -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputEmailRegister"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Correo electrónico"
+        app:layout_constraintTop_toBottomOf="@+id/textInputUsername"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmailRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputPasswordRegister"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        app:layout_constraintTop_toBottomOf="@+id/textInputEmailRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPasswordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Confirmar contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputConfirmPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Confirmar contraseña"
+        app:layout_constraintTop_toBottomOf="@+id/textInputPasswordRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Género -->
+    <TextView
+        android:id="@+id/tvGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Género"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/textInputConfirmPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvGender"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp">
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Masculino" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Femenino" />
+
+        <RadioButton
+            android:id="@+id/radioOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Otro" />
+    </RadioGroup>
+
+    <!-- Fecha de nacimiento -->
+    <TextView
+        android:id="@+id/tvBirthDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha de nacimiento"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupGender"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnSelectDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar fecha"
+        app:layout_constraintTop_toBottomOf="@+id/tvBirthDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Botón de registro -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegisterSubmit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Completar Registro"
+        android:textColor="@android:color/white"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnSelectDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
