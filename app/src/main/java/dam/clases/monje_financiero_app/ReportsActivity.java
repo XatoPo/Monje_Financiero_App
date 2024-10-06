@@ -1,2 +1,6 @@
-package dam.clases.monje_financiero_app;public class ReportsActivity {
+package dam.clases.monje_financiero_app;
+
+import android.app.Activity;
+
+public class ReportsActivity extends Activity {
 }
