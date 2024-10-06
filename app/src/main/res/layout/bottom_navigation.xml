@@ -7,4 +7,5 @@
     android:background="@color/colorCardBackground"
     app:itemIconTint="@color/colorIconTint"
     app:itemTextColor="@color/colorIconTint"
-    app:menu="@menu/menu_bottom_navigation" />
+    app:menu="@menu/menu_bottom_navigation"
+    app:labelVisibilityMode="labeled"/>
