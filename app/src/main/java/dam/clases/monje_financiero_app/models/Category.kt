@@ -5,5 +5,5 @@ data class Category(
     val userId: String,                  // User ID associated with the category
     val name: String,                    // Name of the category
     val color: String,                   // Color associated with the category
-    val iconUrl: String                  // URL of the category icon
+    val iconText: String                 // URL of the category icon
 )
