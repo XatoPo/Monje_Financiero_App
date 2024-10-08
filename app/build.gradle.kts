@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     implementation(libs.androidx.cardview)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
 }
 
