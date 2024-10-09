@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -25,8 +24,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var inputLayoutEmail: TextInputLayout
     private lateinit var inputLayoutPassword: TextInputLayout
     private lateinit var inputLayoutConfirmPassword: TextInputLayout
-    private lateinit var inputLayoutGender: TextInputLayout
-    private lateinit var inputLayoutBirthDate: TextInputLayout
 
     private lateinit var etUsername: TextInputEditText
     private lateinit var etEmail: TextInputEditText
@@ -47,7 +44,6 @@ class RegisterActivity : AppCompatActivity() {
         inputLayoutEmail = findViewById(R.id.textInputEmailRegister)
         inputLayoutPassword = findViewById(R.id.textInputPasswordRegister)
         inputLayoutConfirmPassword = findViewById(R.id.textInputConfirmPassword)
-        inputLayoutGender = findViewById(R.id.tvGender)
 
         etUsername = findViewById(R.id.etUsername)
         etEmail = findViewById(R.id.etEmailRegister)
@@ -60,14 +56,10 @@ class RegisterActivity : AppCompatActivity() {
         usersService = UsersService(this)
 
         // Configurar el botón de selección de fecha
-        btnSelectDate.setOnClickListener {
-            showDatePickerDialog()
-        }
+        btnSelectDate.setOnClickListener { showDatePickerDialog() }
 
         // Configurar el botón de registro
-        btnRegisterSubmit.setOnClickListener {
-            registerUser()
-        }
+        btnRegisterSubmit.setOnClickListener { registerUser() }
     }
 
     private fun showDatePickerDialog() {
