@@ -1,24 +1,30 @@
-package dam.clases.monje_financiero_app;
+package dam.clases.monje_financiero_app.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import dam.clases.monje_financiero_app.R;
 import dam.clases.monje_financiero_app.services.ApiService;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import org.json.JSONObject;
+
 import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText emailField, passwordField;
-    private Button loginButton;
+    private TextInputEditText etEmail, etPassword;
+    private Button btnLogin, btnRegister;
+    private Switch switchRememberSession; // Switch para recordar sesión
     private ApiService apiService;
 
     @Override
@@ -26,22 +32,32 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailField = findViewById(R.id.etEmail);
-        passwordField = findViewById(R.id.etPassword);
-        loginButton = findViewById(R.id.btnLogin);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnRegister = findViewById(R.id.btnRegister);
+        switchRememberSession = findViewById(R.id.switchRememberSession);
         apiService = new ApiService();
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
             }
         });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loginUser() {
-        String email = emailField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
@@ -53,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             json.put("email", email);
             json.put("password", password);
 
-            apiService.post("/login", json, new Callback() {
+            apiService.post("users/login", json.toString(), new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Error al conectar con el servidor", Toast.LENGTH_SHORT).show());
@@ -73,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             finish();
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

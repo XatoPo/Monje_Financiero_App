@@ -1,14 +1,12 @@
-package dam.clases.monje_financiero_app;
+package dam.clases.monje_financiero_app.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
-
 import dam.clases.monje_financiero_app.R;
 import dam.clases.monje_financiero_app.services.ApiService;
 
@@ -36,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
+                    showToast("Error al cargar los datos del usuario");
                     welcomeMessage.setText("Error al cargar los datos del usuario");
                 });
             }
@@ -52,13 +51,19 @@ public class HomeActivity extends AppCompatActivity {
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
+                        runOnUiThread(() -> showToast("Error al procesar los datos del usuario"));
                     }
                 } else {
                     runOnUiThread(() -> {
+                        showToast("Error al cargar los datos del usuario");
                         welcomeMessage.setText("Error al cargar los datos del usuario");
                     });
                 }
             }
         });
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

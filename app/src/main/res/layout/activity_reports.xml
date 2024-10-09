@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReportsActivity"
+    tools:context=".activities.ReportsActivity"
     android:padding="16dp">
 
     <TextView
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp" />
 
     <TextView
         android:id="@+id/tvStartDate"
@@ -28,7 +28,7 @@
         android:text="Fecha inicial"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/tvReportsTitle"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CalendarView
         android:id="@+id/calendarStartDate"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvStartDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/tvEndDate"
@@ -45,7 +45,7 @@
         android:text="Fecha final"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/calendarStartDate"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CalendarView
         android:id="@+id/calendarEndDate"
@@ -53,46 +53,25 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvEndDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/tvFilterBy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filtrar por"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarEndDate"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <RadioGroup
-        android:id="@+id/radioGroupFilter"
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvFilterBy"
+        android:layout_height="300dp"
+        app:layout_constraintTop_toBottomOf="@id/calendarEndDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <RadioButton
-            android:id="@+id/radioCategories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categorías"/>
-
-        <RadioButton
-            android:id="@+id/radioBudgets"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Presupuestos"/>
-    </RadioGroup>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/btnGenerateReport"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Generar reporte"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupFilter"
+        app:layout_constraintTop_toBottomOf="@id/barChart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

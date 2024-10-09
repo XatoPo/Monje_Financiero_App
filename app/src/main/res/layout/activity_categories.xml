@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CategoriesActivity"
+    tools:context=".activities.CategoriesActivity"
     android:padding="16dp">
 
     <TextView
@@ -56,7 +56,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:columnCount="5"
-        android:rowCount="3"/>
+        android:rowCount="3"
+        android:padding="8dp">
+    </GridLayout>
 
     <TextView
         android:id="@+id/tvIconSelection"

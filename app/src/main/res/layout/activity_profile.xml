@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileSettingsActivity"
+    tools:context=".activities.ProfileSettingsActivity"
     android:padding="16dp">
 
     <TextView
@@ -70,31 +70,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
-    <TextView
-        android:id="@+id/tvEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Correo electrónico"
-        app:layout_constraintTop_toBottomOf="@id/etName"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="tu@email.com"
-        app:layout_constraintTop_toBottomOf="@id/tvEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
-
     <Button
         android:id="@+id/btnSaveChanges"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Guardar Cambios"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
+        app:layout_constraintTop_toBottomOf="@id/etName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>

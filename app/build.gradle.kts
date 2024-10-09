@@ -47,6 +47,10 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    implementation(libs.mpandroidchart)
+    implementation(libs.glide)
+    implementation(libs.picasso)
 
 }
 
