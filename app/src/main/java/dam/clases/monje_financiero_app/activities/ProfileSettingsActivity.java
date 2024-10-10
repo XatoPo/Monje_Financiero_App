@@ -25,7 +25,9 @@ import java.io.InputStream;
 import dam.clases.monje_financiero_app.R;
 import dam.clases.monje_financiero_app.services.ApiService;
 import dam.clases.monje_financiero_app.services.UsersService;
+import dam.clases.monje_financiero_app.services.UsersService.UploadCallback; // Importa la interfaz UploadCallback
 import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ProfileSettingsActivity extends AppCompatActivity {
 
@@ -36,9 +38,29 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private ImageView ivProfilePicture;
     private UsersService usersService;
     private Uri imageUri;
-    private String userId;
 
     private static final int PICK_IMAGE = 1;
+
+    private void updateUserProfile(String name, String profileImageUrl) {
+        usersService.updateUser(ApiService.getUserId(this), name, profileImageUrl, new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al actualizar el perfil", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                runOnUiThread(() -> {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(ProfileSettingsActivity.this, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileSettingsActivity.this, "Error al actualizar el perfil: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +75,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         usersService = new UsersService(this);
-        userId = ApiService.getUserId(this);
-
-        // Cargar datos del usuario
-        loadUserData();
 
         btnChangePhoto.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -76,69 +94,37 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             // Validación: nombre no vacío
             if (name.isEmpty()) {
                 textInputName.setError("El nombre no puede estar vacío");
-                return;
+                return; // Salimos si el nombre está vacío
             }
 
             // Subir imagen si se ha seleccionado
             if (imageUri != null) {
                 try {
                     File imageFile = createFileFromUri(imageUri);
-                    usersService.uploadImage(ProfileSettingsActivity.this, imageFile, new Callback() {
+                    usersService.uploadImage(ProfileSettingsActivity.this, imageFile, new UploadCallback() {
                         @Override
-                        public void onFailure(okhttp3.Call call, IOException e) {
-                            runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show());
+                        public void onSuccess(String imageUrl) {
+                            // Ahora que tenemos la URL de la imagen, actualizamos el usuario
+                            updateUserProfile(name, imageUrl);
                         }
 
                         @Override
-                        public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                            String responseBody = response.body().string();
-                            runOnUiThread(() -> {
-                                Toast.makeText(ProfileSettingsActivity.this, "Imagen subida correctamente", Toast.LENGTH_SHORT).show();
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(responseBody);
-                                    String imageUrl = jsonResponse.getJSONObject("data").getString("url"); // Ajusta aquí para obtener la URL
-                                    updateUserProfile(name, imageUrl);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(ProfileSettingsActivity.this, "Error al procesar la respuesta de la imagen", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        public void onFailure(okhttp3.Call call, IOException e) {
+                            runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show());
                         }
                     });
                 } catch (IOException e) {
                     Toast.makeText(this, "Error al manejar la imagen", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                updateUserProfile(name, "");  // Sin imagen
+                // Si no hay imagen, solo actualizamos el nombre
+                updateUserProfile(name, null); // Pasar null o "" como URL
             }
         });
+
 
         // Configurar el BottomNavigationView
         configureBottomNavigation();
-    }
-
-    // Cargar datos del usuario
-    private void loadUserData() {
-        usersService.getUser(userId, new Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                String responseBody = response.body().string();
-                runOnUiThread(() -> {
-                    try {
-                        // Mostrar el cuerpo de la respuesta en un Toast para ver los datos
-                        Toast.makeText(ProfileSettingsActivity.this, "Datos del usuario: " + responseBody, Toast.LENGTH_SHORT).show();
-                        // Aquí puedes procesar y cargar los datos en los campos
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-        });
     }
 
     // Método para convertir Uri a un archivo
@@ -163,29 +149,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             imageUri = data.getData();
             ivProfilePicture.setImageURI(imageUri);
         }
-    }
-
-    private void updateUserProfile(String name, String imageUrl) {
-        // Mostrar Toast para indicar que se está intentando actualizar
-        Toast.makeText(this, "Actualizando perfil...", Toast.LENGTH_SHORT).show();
-
-        usersService.updateUser(userId, name, imageUrl, new Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al actualizar el perfil", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                runOnUiThread(() -> {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(ProfileSettingsActivity.this, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ProfileSettingsActivity.this, "Error del servidor al actualizar el perfil: " + response.code(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
     }
 
     // Configurar la barra de navegación inferior

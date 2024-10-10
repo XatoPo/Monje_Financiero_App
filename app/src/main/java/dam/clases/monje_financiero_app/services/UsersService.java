@@ -1,6 +1,7 @@
 package dam.clases.monje_financiero_app.services;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import dam.clases.monje_financiero_app.activities.ProfileSettingsActivity;
 import okhttp3.*;
@@ -80,13 +81,20 @@ public class UsersService {
         apiService.put("users/" + userId, json.toString(), callback);
     }
 
-    public void uploadImage(Context context, File imageFile, Callback callback) {
+    public interface UploadCallback {
+        void onSuccess(String imageUrl);
+        void onFailure(Call call, IOException e);
+    }
+
+    public void uploadImage(Context context, File imageFile, UploadCallback callback) {
         OkHttpClient client = new OkHttpClient();
 
+        // Cuerpo de la solicitud para subir la imagen
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("key", IMGBB_API_KEY)
-                .addFormDataPart("image", imageFile.getName(), RequestBody.create(MediaType.parse("image/*"), imageFile)) // Agregar imagen directamente
+                .addFormDataPart("image", imageFile.getName(),
+                        RequestBody.create(MediaType.parse("image/*"), imageFile)) // Agregar imagen
                 .build();
 
         Request request = new Request.Builder()
@@ -97,7 +105,7 @@ public class UsersService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // Pasar el fallo al callback original
+                // Manejo de fallo en la subida
                 callback.onFailure(call, e);
             }
 
@@ -105,30 +113,32 @@ public class UsersService {
             public void onResponse(Call call, Response response) {
                 try {
                     if (response.isSuccessful()) {
-                        String responseBody = response.body().string();
+                        // Procesar la respuesta exitosa
+                        String responseBody = response.body().string(); // Lee el cuerpo de la respuesta
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         boolean success = jsonResponse.getBoolean("success");
+
                         if (success) {
                             String imageUrl = jsonResponse.getJSONObject("data").getString("url");
 
-                            // Ejecutar en el hilo principal para actualizar la UI si es necesario
+                            // Ejecutar en el hilo principal para mostrar el resultado
                             ((ProfileSettingsActivity) context).runOnUiThread(() -> {
-                                try {
-                                    // Pasar la respuesta al callback original
-                                    callback.onResponse(call, response);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                Toast.makeText(context, "URL de la imagen: " + imageUrl, Toast.LENGTH_LONG).show();
+                                // Pasar la respuesta al callback original
+                                callback.onSuccess(imageUrl);
                             });
                         } else {
-                            callback.onFailure(call, new IOException("Failed to upload image"));
+                            callback.onFailure(call, new IOException("Fallo al subir la imagen"));
                         }
                     } else {
-                        callback.onFailure(call, new IOException("Unexpected response " + response));
+                        callback.onFailure(call, new IOException("Error de respuesta inesperada: " + response.code()));
                     }
                 } catch (JSONException | IOException e) {
-                    // Manejar la excepción correctamente
-                    callback.onFailure(call, new IOException("Error processing response", e));
+                    callback.onFailure(call, new IOException("Error al procesar la respuesta", e));
+                } finally {
+                    if (response.body() != null) {
+                        response.body().close(); // Cerrar el cuerpo de la respuesta
+                    }
                 }
             }
         });
