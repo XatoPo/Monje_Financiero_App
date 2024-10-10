@@ -14,6 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -51,6 +52,8 @@ dependencies {
     implementation(libs.mpandroidchart)
     implementation(libs.glide)
     implementation(libs.picasso)
+    annotationProcessor(libs.compiler)
+
 
 }
 

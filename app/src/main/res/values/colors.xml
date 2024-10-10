@@ -20,4 +20,7 @@
     <!-- Otros colores -->
     <color name="colorGray">#5B5B5B</color>
     <color name="black">#000000</color>
+
+    <color name="colorIconActive">#38B2AC</color> <!-- Verde (cuando está activo) -->
+    <color name="colorIconInactive">#5B5B5B</color> <!-- Gris (cuando está inactivo) -->
 </resources>

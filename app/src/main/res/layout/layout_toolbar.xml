@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Hola, [Nombre del Usuario]"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="16dp"/>

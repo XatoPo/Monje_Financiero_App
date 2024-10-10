@@ -1,23 +1,18 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_edit_profile"
-        android:title="Editar perfil"
         android:icon="@drawable/ic_user_edit"
-        app:showAsAction="always" />
+        android:title="Editar perfil" />
     <item
         android:id="@+id/menu_guide"
-        android:title="Guía de uso"
         android:icon="@drawable/ic_help_circle"
-        app:showAsAction="always" />
+        android:title="Guía de uso" />
     <item
         android:id="@+id/menu_office_location"
-        android:title="Ubicación de oficinas"
         android:icon="@drawable/ic_map_pin"
-        app:showAsAction="always" />
+        android:title="Ubicación de oficinas" />
     <item
         android:id="@+id/menu_logout"
-        android:title="Cerrar sesión"
         android:icon="@drawable/ic_logout"
-        app:showAsAction="always" />
+        android:title="Cerrar sesión" />
 </menu>

@@ -77,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
                             // Guardar el userId en SharedPreferences
                             ApiService.saveUserId(LoginActivity.this, userId);
 
+                            // Mostrar el userId para verificar que se guarda correctamente
+                            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "User ID guardado: " + userId, Toast.LENGTH_SHORT).show());
+
                             // Redirigir a la pantalla principal
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);

@@ -1,11 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home"
-        android:title="Inicio"
-        app:layout_anchorGravity="center"/>
-    <item
         android:id="@+id/navigation_expenses"
         android:icon="@drawable/ic_expenses"
         android:title="Gastos"/>
@@ -13,6 +8,11 @@
         android:id="@+id/navigation_budgets"
         android:icon="@drawable/ic_budget"
         android:title="Presupuestos"/>
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="Inicio"
+        app:layout_anchorGravity="center"/>
     <item
         android:id="@+id/navigation_reports"
         android:icon="@drawable/ic_reports"

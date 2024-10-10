@@ -16,4 +16,7 @@
     <color name="colorSurface">#2D3748</color> <!-- Superficies oscuras -->
     <color name="colorOnBackground">#F7FAFC</color> <!-- Texto claro para fondos oscuros -->
     <color name="colorOnSurface">#F7FAFC</color> <!-- Texto claro para superficies oscuras -->
+
+    <color name="colorIconActive">#4FD1C5</color> <!-- Verde claro (activo) -->
+    <color name="colorIconInactive">#A0AEC0</color> <!-- Gris claro (inactivo) -->
 </resources>
