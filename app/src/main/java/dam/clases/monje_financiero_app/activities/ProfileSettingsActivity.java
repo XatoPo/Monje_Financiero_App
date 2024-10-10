@@ -1,2 +1,215 @@
-package dam.clases.monje_financiero_app.activities;public class ProfileSettingsActivity {
+package dam.clases.monje_financiero_app.activities;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import dam.clases.monje_financiero_app.R;
+import dam.clases.monje_financiero_app.services.ApiService;
+import dam.clases.monje_financiero_app.services.UsersService;
+import okhttp3.Callback;
+
+public class ProfileSettingsActivity extends AppCompatActivity {
+
+    private TextInputEditText etName;
+    private TextInputLayout textInputName;
+    private Button btnSaveChanges, btnChangePhoto;
+    private ImageButton btnBack;
+    private ImageView ivProfilePicture;
+    private UsersService usersService;
+    private Uri imageUri;
+    private String userId;
+
+    private static final int PICK_IMAGE = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+
+        etName = findViewById(R.id.etName);
+        textInputName = findViewById(R.id.textInputName);
+        btnSaveChanges = findViewById(R.id.btnSaveChanges);
+        btnChangePhoto = findViewById(R.id.btnChangePhoto);
+        ivProfilePicture = findViewById(R.id.ivProfilePicture);
+        btnBack = findViewById(R.id.btnBack);
+
+        usersService = new UsersService(this);
+        userId = ApiService.getUserId(this);
+
+        // Cargar datos del usuario
+        loadUserData();
+
+        btnChangePhoto.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE);
+        });
+
+        // Botón para regresar a HomeActivity
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileSettingsActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        btnSaveChanges.setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+
+            // Validación: nombre no vacío
+            if (name.isEmpty()) {
+                textInputName.setError("El nombre no puede estar vacío");
+                return;
+            }
+
+            // Subir imagen si se ha seleccionado
+            if (imageUri != null) {
+                try {
+                    File imageFile = createFileFromUri(imageUri);
+                    usersService.uploadImage(ProfileSettingsActivity.this, imageFile, new Callback() {
+                        @Override
+                        public void onFailure(okhttp3.Call call, IOException e) {
+                            runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show());
+                        }
+
+                        @Override
+                        public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                            String responseBody = response.body().string();
+                            runOnUiThread(() -> {
+                                Toast.makeText(ProfileSettingsActivity.this, "Imagen subida correctamente", Toast.LENGTH_SHORT).show();
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(responseBody);
+                                    String imageUrl = jsonResponse.getJSONObject("data").getString("url"); // Ajusta aquí para obtener la URL
+                                    updateUserProfile(name, imageUrl);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ProfileSettingsActivity.this, "Error al procesar la respuesta de la imagen", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                } catch (IOException e) {
+                    Toast.makeText(this, "Error al manejar la imagen", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                updateUserProfile(name, "");  // Sin imagen
+            }
+        });
+
+        // Configurar el BottomNavigationView
+        configureBottomNavigation();
+    }
+
+    // Cargar datos del usuario
+    private void loadUserData() {
+        usersService.getUser(userId, new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                String responseBody = response.body().string();
+                runOnUiThread(() -> {
+                    try {
+                        // Mostrar el cuerpo de la respuesta en un Toast para ver los datos
+                        Toast.makeText(ProfileSettingsActivity.this, "Datos del usuario: " + responseBody, Toast.LENGTH_SHORT).show();
+                        // Aquí puedes procesar y cargar los datos en los campos
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+    }
+
+    // Método para convertir Uri a un archivo
+    private File createFileFromUri(Uri uri) throws IOException {
+        File file = new File(getCacheDir(), "profile_image.jpg");
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        inputStream.close();
+        outputStream.close();
+        return file;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            ivProfilePicture.setImageURI(imageUri);
+        }
+    }
+
+    private void updateUserProfile(String name, String imageUrl) {
+        // Mostrar Toast para indicar que se está intentando actualizar
+        Toast.makeText(this, "Actualizando perfil...", Toast.LENGTH_SHORT).show();
+
+        usersService.updateUser(userId, name, imageUrl, new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(ProfileSettingsActivity.this, "Error al actualizar el perfil", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                runOnUiThread(() -> {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(ProfileSettingsActivity.this, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileSettingsActivity.this, "Error del servidor al actualizar el perfil: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    // Configurar la barra de navegación inferior
+    private void configureBottomNavigation() {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.navigation_home) {
+                startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class));
+                return true;
+            } else if (id == R.id.navigation_expenses) {
+                startActivity(new Intent(ProfileSettingsActivity.this, ExpensesActivity.class));
+                return true;
+            } else if (id == R.id.navigation_budgets) {
+                startActivity(new Intent(ProfileSettingsActivity.this, BudgetsActivity.class));
+                return true;
+            } else if (id == R.id.navigation_reports) {
+                startActivity(new Intent(ProfileSettingsActivity.this, ReportsActivity.class));
+                return true;
+            } else if (id == R.id.navigation_settings) {
+                startActivity(new Intent(ProfileSettingsActivity.this, SettingsActivity.class));
+                return true;
+            }
+            return false;
+        });
+    }
 }
