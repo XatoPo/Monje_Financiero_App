@@ -8,27 +8,24 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.GridLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import dam.clases.monje_financiero_app.R
-import dam.clases.monje_financiero_app.services.CategoriesService
 import dam.clases.monje_financiero_app.models.Category
+import dam.clases.monje_financiero_app.services.CategoriesService
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
-import androidx.core.graphics.ColorUtils
 
 class CategorySelectionActivity : AppCompatActivity() {
-    private lateinit var linearLayoutCategories: LinearLayout
     private lateinit var btnClose: Button
     private lateinit var categoriesService: CategoriesService
     private lateinit var gridLayoutCategories: GridLayout
+    private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +36,16 @@ class CategorySelectionActivity : AppCompatActivity() {
 
         categoriesService = CategoriesService(this)
 
+        // Obtener el userId de SharedPreferences
+        val sharedPreferences = getSharedPreferences("MonjeFinancieroPrefs", MODE_PRIVATE)
+        userId = sharedPreferences.getString("user_id", null)
+
         // Cargar las categorías desde la base de datos
-        loadCategories()
+        if (userId != null) {
+            loadCategories(userId!!)
+        } else {
+            Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        }
 
         // Configurar el botón de cerrar
         btnClose.setOnClickListener {
@@ -48,8 +53,8 @@ class CategorySelectionActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadCategories() {
-        categoriesService.getAllCategories(object : Callback {
+    private fun loadCategories(userId: String) {
+        categoriesService.getAllCategories(userId, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     Toast.makeText(this@CategorySelectionActivity, "Error al cargar categorías", Toast.LENGTH_SHORT).show()
@@ -60,12 +65,21 @@ class CategorySelectionActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
                     Log.d("CategorySelectionActivity", "Response Body: $responseBody")
+
                     try {
-                        // Parsear el JSONArray principal
+                        // Parsear la respuesta como JSONArray
                         val jsonArray = JSONArray(responseBody)
 
-                        // Verificar que el primer elemento sea un JSONArray
+                        // Obtener el primer elemento que es un JSONArray de categorías
                         val categoriesJsonArray = jsonArray.getJSONArray(0)
+
+                        // Verificar si el array de categorías está vacío
+                        if (categoriesJsonArray.length() == 0) {
+                            runOnUiThread {
+                                Toast.makeText(this@CategorySelectionActivity, "No se encontraron categorías", Toast.LENGTH_SHORT).show()
+                            }
+                            return
+                        }
 
                         runOnUiThread {
                             for (i in 0 until categoriesJsonArray.length()) {
@@ -83,12 +97,12 @@ class CategorySelectionActivity : AppCompatActivity() {
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         runOnUiThread {
-                            Toast.makeText(this@CategorySelectionActivity, "Error al procesar la respuesta", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@CategorySelectionActivity, "Error al procesar la respuesta del servidor", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
                     runOnUiThread {
-                        Toast.makeText(this@CategorySelectionActivity, "Error al obtener categorías", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@CategorySelectionActivity, "Error al obtener categorías del servidor", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

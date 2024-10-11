@@ -48,8 +48,8 @@ public class CategoriesService {
         });
     }
 
-    public void getAllCategories(Callback callback) {
-        apiService.get("categories", new Callback() {
+    public void getAllCategories(String userId, Callback callback) {
+        apiService.get("categories?user_id=" + userId, new Callback() { // Cambia aquí
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.onFailure(call, e);
