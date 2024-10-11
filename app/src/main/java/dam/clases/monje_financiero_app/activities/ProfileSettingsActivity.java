@@ -153,6 +153,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     // Configurar la barra de navegación inferior
     private void configureBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();

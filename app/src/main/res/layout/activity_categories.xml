@@ -8,6 +8,18 @@
     tools:context=".activities.CategoriesActivity"
     android:padding="16dp">
 
+    <!-- Botón de Regresar -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="35dp"
+        android:layout_height="20dp"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="Regresar"
+        android:src="@drawable/ic_back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Título de la pantalla -->
     <TextView
         android:id="@+id/tvCategoriesTitle"
         android:layout_width="wrap_content"
@@ -16,86 +28,114 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="?attr/colorPrimary"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutCategoryName"
+    <!-- ScrollView para el contenido desplazable -->
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Nombre de la categoría"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvCategoriesTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etCategoryName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/tvCategoryColor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccionar color"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutCategoryName"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <GridLayout
-        android:id="@+id/gridColors"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCategoryColor"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:columnCount="5"
-        android:rowCount="3"
-        android:padding="8dp">
-    </GridLayout>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tvIconSelection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccionar ícono"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/gridColors"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <!-- Contenido del formulario dentro del ScrollView -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ScrollView
-        android:id="@+id/iconScrollView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvIconSelection"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+            <!-- Nombre de la categoría -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutCategoryName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nombre de la categoría"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/iconContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:paddingBottom="16dp"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCategoryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Selección de colores -->
+            <TextView
+                android:id="@+id/tvCategoryColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar color"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/inputLayoutCategoryName"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <HorizontalScrollView
+                android:id="@+id/colorScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/tvCategoryColor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/colorContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- Selección de íconos -->
+            <TextView
+                android:id="@+id/tvIconSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccionar ícono"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/colorScrollView"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <GridLayout
+                android:id="@+id/gridIcons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/tvIconSelection"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:columnCount="6"
+                android:padding="8dp" />
+
+            <!-- Botón para agregar categoría -->
+            <Button
+                android:id="@+id/btnAddCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Agregar categoría"
+                app:layout_constraintTop_toBottomOf="@id/gridIcons"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/btnAddCategory"
-        android:layout_width="0dp"
+    <!-- Bottom Navigation View que permanece fijo en la parte inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar categoría"
-        app:layout_constraintTop_toBottomOf="@id/iconScrollView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
+        android:layout_gravity="bottom"
+        app:menu="@menu/menu_bottom_navigation"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-  
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo del marco -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:width="4dp" android:color="@color/colorOnBackground"/> <!-- El color del marco -->
+            <solid android:color="@android:color/transparent" /> <!-- Fondo transparente -->
+        </shape>
+    </item>
+    <!-- Color original -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@android:color/transparent" /> <!-- Inicialmente transparente -->
+        </shape>
+    </item>
+</layer-list>
