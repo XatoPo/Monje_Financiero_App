@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.GridLayout
@@ -28,11 +27,11 @@ class CategoriesActivity : AppCompatActivity() {
     private lateinit var etCategoryName: TextInputEditText
     private lateinit var btnAddCategory: Button
     private lateinit var gridIcons: GridLayout
-    private lateinit var colorContainer: LinearLayout // Cambiado a LinearLayout
+    private lateinit var colorContainer: LinearLayout
     private lateinit var categoriesService: CategoriesService
     private var userId: String? = null
-    private var selectedColor: String = "#FF5733" // Color por defecto
-    private var selectedIconText: String = "🍔" // Ícono por defecto
+    private var selectedColor: String? = null
+    private var selectedIconText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,66 +40,84 @@ class CategoriesActivity : AppCompatActivity() {
         etCategoryName = findViewById(R.id.etCategoryName)
         btnAddCategory = findViewById(R.id.btnAddCategory)
         gridIcons = findViewById(R.id.gridIcons)
-        colorContainer = findViewById(R.id.colorContainer) // Inicializa el LinearLayout
+        colorContainer = findViewById(R.id.colorContainer)
 
-        // Obtener el userId de SharedPreferences
         val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
         userId = sharedPreferences.getString("user_id", null)
 
         categoriesService = CategoriesService(this)
 
-        // Configurar el botón para agregar categoría
         btnAddCategory.setOnClickListener {
-            addCategory()
+            validateAndAddCategory()
         }
 
-        // Configurar iconos y colores
         setupIconSelection()
         setupColorSelection()
 
-        // Agregar el botón de regresar
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
-            finish() // Regresar a la actividad anterior
+            finish()
         }
 
-
-        // Configurar el BottomNavigationView
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNavigationView.selectedItemId = R.id.navigation_home
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomNavigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            val id = item.itemId
-            if (id == R.id.navigation_home) {
-                startActivity(Intent(this@CategoriesActivity, HomeActivity::class.java))
-                return@OnNavigationItemSelectedListener true
-            } else if (id == R.id.navigation_expenses) {
-                startActivity(Intent(this@CategoriesActivity, ExpensesActivity::class.java))
-                return@OnNavigationItemSelectedListener true
-            } else if (id == R.id.navigation_budgets) {
-                startActivity(Intent(this@CategoriesActivity, BudgetsActivity::class.java))
-                return@OnNavigationItemSelectedListener true
-            } else if (id == R.id.navigation_reports) {
-                startActivity(Intent(this@CategoriesActivity, ReportsActivity::class.java))
-                return@OnNavigationItemSelectedListener true
-            } else if (id == R.id.navigation_settings) {
-                startActivity(Intent(this@CategoriesActivity, SettingsActivity::class.java))
-                return@OnNavigationItemSelectedListener true
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.navigation_expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    true
+                }
+                R.id.navigation_budgets -> {
+                    startActivity(Intent(this, BudgetsActivity::class.java))
+                    true
+                }
+                R.id.navigation_reports -> {
+                    startActivity(Intent(this, ReportsActivity::class.java))
+                    true
+                }
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
             }
-            false
-        })
+        }
     }
 
-    private fun addCategory() {
+    private fun validateAndAddCategory() {
         val categoryName = etCategoryName.text.toString().trim()
 
-        // Validar que el nombre de la categoría no esté vacío
-        if (categoryName.isEmpty()) {
-            Toast.makeText(this, "Ingresa el nombre de la categoría", Toast.LENGTH_SHORT).show()
+        // Limpiar errores previos
+        etCategoryName.error = null
+
+        when {
+            categoryName.isEmpty() -> {
+                etCategoryName.error = "El nombre no puede estar vacío"
+            }
+            selectedColor == null -> {
+                Toast.makeText(this, "Selecciona un color", Toast.LENGTH_SHORT).show()
+            }
+            selectedIconText == null -> {
+                Toast.makeText(this, "Selecciona un ícono", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                addCategory(categoryName)
+            }
+        }
+    }
+
+    private fun addCategory(categoryName: String) {
+        // Obtener el userId de SharedPreferences
+        val sharedPreferences = getSharedPreferences("MonjeFinancieroPrefs", MODE_PRIVATE)
+        userId = sharedPreferences.getString("user_id", null)
+        if (userId == null) {
+            Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Llamar al servicio para agregar la categoría
-        categoriesService.addCategory(userId!!, categoryName, selectedColor, selectedIconText, object : Callback {
+        categoriesService.addCategory(userId!!, categoryName, selectedColor!!, selectedIconText!!, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     Toast.makeText(this@CategoriesActivity, "Error al conectar con el servidor", Toast.LENGTH_SHORT).show()
@@ -111,7 +128,7 @@ class CategoriesActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     runOnUiThread {
                         Toast.makeText(this@CategoriesActivity, "Categoría agregada", Toast.LENGTH_SHORT).show()
-                        etCategoryName.setText("") // Limpiar el campo
+                        etCategoryName.setText("")
                     }
                 } else {
                     runOnUiThread {
@@ -123,7 +140,6 @@ class CategoriesActivity : AppCompatActivity() {
     }
 
     private fun setupIconSelection() {
-        // Lista de emojis para seleccionar
         val emojis = arrayOf("🍔", "🍕", "🍣", "🍩", "🍦", "🍇", "🌟",
             "💰", "🛒", "🏡", "📚", "🎉", "🚗", "⚽",
             "📈", "📅", "💼", "🎮", "🎤", "🎨", "🎁")
@@ -133,17 +149,21 @@ class CategoriesActivity : AppCompatActivity() {
                 text = emoji
                 textSize = 24f
                 setPadding(16, 16, 16, 16)
-                setBackgroundResource(R.drawable.icon_selector) // Fondo circular para el ícono
+                setBackgroundResource(R.drawable.icon_selector)
                 setOnClickListener {
-                    selectedIconText = emoji // Guardar el ícono seleccionado
-                    updateIconSelection(this) // Resaltar el ícono seleccionado
-                    Toast.makeText(this@CategoriesActivity, "Ícono seleccionado: $selectedIconText", Toast.LENGTH_SHORT).show()
+                    selectedIconText = emoji
+                    updateIconSelection(this)
+                    val toast = Toast.makeText(this@CategoriesActivity, "Ícono seleccionado: $selectedIconText", Toast.LENGTH_SHORT)
+                    toast.show()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        toast.cancel()
+                    }, 1500) // Duración personalizada
                 }
             }
             gridIcons.addView(emojiView)
         }
 
-        // Hacer que los íconos aprovechen todo el espacio lateral
         gridIcons.post {
             adjustGridItemSize(gridIcons)
         }
@@ -152,11 +172,7 @@ class CategoriesActivity : AppCompatActivity() {
     private fun updateIconSelection(selectedView: TextView) {
         for (i in 0 until gridIcons.childCount) {
             val icon = gridIcons.getChildAt(i) as TextView
-            if (icon == selectedView) {
-                icon.setBackgroundColor(Color.LTGRAY) // Cambia el color de fondo del ícono seleccionado
-            } else {
-                icon.setBackgroundColor(Color.TRANSPARENT) // Restablece el color de fondo para los demás íconos
-            }
+            icon.setBackgroundColor(if (icon == selectedView) Color.LTGRAY else Color.TRANSPARENT)
         }
     }
 
@@ -168,12 +184,10 @@ class CategoriesActivity : AppCompatActivity() {
             "#FAD6A5", "#B9F6CA", "#E1BEE7", "#C5CAE9", "#FFCDD2"
         )
 
-        val colorContainer = findViewById<LinearLayout>(R.id.colorContainer)
-
         for (color in colors) {
             val colorFrame = FrameLayout(this).apply {
                 layoutParams = LinearLayout.LayoutParams(100, 100)
-                setPadding(8, 8, 8, 8) // Espaciado
+                setPadding(8, 8, 8, 8)
             }
 
             val colorView = View(this).apply {
@@ -190,7 +204,7 @@ class CategoriesActivity : AppCompatActivity() {
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT
                 )
-                visibility = View.GONE // Inicialmente invisible
+                visibility = View.GONE
             }
 
             colorFrame.addView(colorView)
@@ -200,13 +214,9 @@ class CategoriesActivity : AppCompatActivity() {
                 selectedColor = color
                 updateColorSelection(borderView)
 
-                // Crear el Toast
                 val toast = Toast.makeText(this@CategoriesActivity, "Color seleccionado: $selectedColor", Toast.LENGTH_SHORT)
-
-                // Mostrar el Toast
                 toast.show()
 
-                // Cancelar el Toast después de 500 ms (ajusta el tiempo según desees)
                 Handler(Looper.getMainLooper()).postDelayed({
                     toast.cancel()
                 }, 1500) // Duración personalizada
@@ -216,35 +226,26 @@ class CategoriesActivity : AppCompatActivity() {
         }
     }
 
-
     private fun updateColorSelection(selectedBorder: View) {
-        val colorContainer = findViewById<LinearLayout>(R.id.colorContainer)
         for (i in 0 until colorContainer.childCount) {
             val colorFrame = colorContainer.getChildAt(i) as FrameLayout
-            val borderView = colorFrame.getChildAt(1) // El borderView
-
-            if (borderView == selectedBorder) {
-                borderView.visibility = View.VISIBLE // Muestra el marco para el color seleccionado
-            } else {
-                borderView.visibility = View.GONE // Oculta el marco para los demás
-            }
+            val borderView = colorFrame.getChildAt(1)
+            borderView.visibility = if (borderView == selectedBorder) View.VISIBLE else View.GONE
         }
     }
 
-    // Ajusta el tamaño de los elementos de LinearLayout y GridLayout para que ocupen todo el espacio disponible
-    private fun adjustGridItemSize(layout: ViewGroup) {
-        val totalWidth = layout.width
+    private fun adjustGridItemSize(gridLayout: GridLayout) {
+        val totalWidth = gridLayout.width
+        val columnCount = gridLayout.columnCount
+        val itemSize = totalWidth / columnCount
 
-        for (i in 0 until layout.childCount) {
-            val view = layout.getChildAt(i)
-            val params = view.layoutParams
-
-            // Ajusta el tamaño de los elementos para LinearLayout y GridLayout
-            if (params is LinearLayout.LayoutParams || params is GridLayout.LayoutParams) {
-                params.width = totalWidth / layout.childCount - 16 // Ajuste con márgenes
-                params.height = 100 // Altura fija
-                view.layoutParams = params
-            }
+        for (i in 0 until gridLayout.childCount) {
+            val view = gridLayout.getChildAt(i)
+            val params = view.layoutParams as GridLayout.LayoutParams
+            params.width = itemSize - 16
+            params.height = itemSize - 16
+            view.layoutParams = params
+            view.requestLayout()
         }
     }
 }

@@ -111,7 +111,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tvIconSelection"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:columnCount="6"
+                android:columnCount="7  "
                 android:padding="8dp" />
 
             <!-- Botón para agregar categoría -->
