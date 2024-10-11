@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.picasso)
     annotationProcessor(libs.compiler)
-
+    implementation(libs.androidx.core.ktx.v160)
 
 }
 

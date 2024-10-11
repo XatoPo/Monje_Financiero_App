@@ -2,8 +2,12 @@ package dam.clases.monje_financiero_app.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -15,18 +19,22 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
+import androidx.core.graphics.ColorUtils
 
 class CategorySelectionActivity : AppCompatActivity() {
     private lateinit var linearLayoutCategories: LinearLayout
     private lateinit var btnClose: Button
     private lateinit var categoriesService: CategoriesService
+    private lateinit var gridLayoutCategories: GridLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_category_selection) // Asegúrate de que el layout tenga este nombre
+        setContentView(R.layout.dialog_category_selection)
 
-        linearLayoutCategories = findViewById(R.id.linearLayoutCategories)
+        gridLayoutCategories = findViewById(R.id.gridLayoutCategories)
         btnClose = findViewById(R.id.btnClose)
 
         categoriesService = CategoriesService(this)
@@ -51,19 +59,31 @@ class CategorySelectionActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    val categoriesJsonArray = JSONArray(responseBody)
+                    Log.d("CategorySelectionActivity", "Response Body: $responseBody")
+                    try {
+                        // Parsear el JSONArray principal
+                        val jsonArray = JSONArray(responseBody)
 
-                    runOnUiThread {
-                        for (i in 0 until categoriesJsonArray.length()) {
-                            val categoryJson = categoriesJsonArray.getJSONObject(i)
-                            val category = Category(
-                                id = categoryJson.getString("id"),
-                                userId = categoryJson.getString("user_id"),
-                                name = categoryJson.getString("name"),
-                                color = categoryJson.getString("color"),
-                                iconText = categoryJson.getString("icon_text")
-                            )
-                            addCategoryToView(category)
+                        // Verificar que el primer elemento sea un JSONArray
+                        val categoriesJsonArray = jsonArray.getJSONArray(0)
+
+                        runOnUiThread {
+                            for (i in 0 until categoriesJsonArray.length()) {
+                                val categoryJson = categoriesJsonArray.getJSONObject(i)
+                                val category = Category(
+                                    id = categoryJson.getString("id"),
+                                    userId = categoryJson.getString("user_id"),
+                                    name = categoryJson.getString("name"),
+                                    color = categoryJson.getString("color"),
+                                    iconText = categoryJson.getString("icon_text")
+                                )
+                                addCategoryToView(category)
+                            }
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        runOnUiThread {
+                            Toast.makeText(this@CategorySelectionActivity, "Error al procesar la respuesta", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
@@ -76,18 +96,53 @@ class CategorySelectionActivity : AppCompatActivity() {
     }
 
     private fun addCategoryToView(category: Category) {
-        val categoryTextView = TextView(this).apply {
-            text = category.name
-            textSize = 18f
-            setPadding(8, 8, 8, 8)
-            setOnClickListener {
-                val resultIntent = Intent().apply {
-                    putExtra("selectedCategory", category) // Pasar la categoría como Parcelable
-                }
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish() // Cerrar el diálogo
-            }
+        // Inflar el layout de la categoría
+        val categoryView = layoutInflater.inflate(R.layout.category_item, null)
+
+        // Obtener referencias a los elementos del layout
+        val iconTextView = categoryView.findViewById<TextView>(R.id.iconText)
+        val categoryNameTextView = categoryView.findViewById<TextView>(R.id.categoryName)
+
+        // Crear un GradientDrawable
+        val drawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 16f // Radio de los bordes redondeados
+            setStroke(1, Color.DKGRAY) // Color del borde
+            val originalColor = Color.parseColor(category.color)
+            val alpha = (0.8 * 255).toInt() // 80% opacidad
+            setColor((alpha shl 24) or (originalColor and 0x00FFFFFF)) // Color de fondo con opacidad
         }
-        linearLayoutCategories.addView(categoryTextView)
+
+        // Aplicar el Drawable al fondo del categoryView
+        categoryView.background = drawable
+
+        // Establecer el icono y el nombre
+        iconTextView.text = category.iconText
+        categoryNameTextView.text = category.name
+
+        // Cambiar el color del texto a negro
+        iconTextView.setTextColor(Color.BLACK)
+        categoryNameTextView.setTextColor(Color.BLACK)
+
+        // Establecer el click listener
+        categoryView.setOnClickListener {
+            val resultIntent = Intent().apply {
+                putExtra("selectedCategory", category) // Pasar la categoría como Parcelable
+            }
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish() // Cerrar el diálogo
+        }
+
+        // Crear LayoutParams para el espaciado
+        val params = GridLayout.LayoutParams()
+        params.setMargins(8, 8, 8, 8) // Margen de 8dp en todos los lados
+        params.width = 0 // Ancho flexible
+        params.height = GridLayout.LayoutParams.WRAP_CONTENT // Alto adaptable
+        params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // Ocupa toda la fila
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // Ocupa toda la columna
+        categoryView.layoutParams = params
+
+        // Añadir la vista al GridLayout principal
+        gridLayoutCategories.addView(categoryView)
     }
 }

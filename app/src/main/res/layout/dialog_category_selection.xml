@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Selecciona una categoría"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle"
+        android:layout_above="@+id/btnClose"
+        android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutCategories"
+        <GridLayout
+            android:id="@+id/gridLayoutCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- Las categorías se agregarán aquí dinámicamente -->
-        </LinearLayout>
+            android:columnCount="2"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center">
+        </GridLayout>
+
     </ScrollView>
 
-    <!-- Botón de Cierre -->
     <Button
         android:id="@+id/btnClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cerrar" />
-</LinearLayout>
+        android:text="Cerrar"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
