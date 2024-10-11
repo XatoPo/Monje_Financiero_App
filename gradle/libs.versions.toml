@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.1"
 compiler = "4.12.0"
+constraintlayout = "2.1.4"
 coreKtxVersion = "1.6.0"
 glide = "4.15.0"
 googleMaterial = "1.12.0"
@@ -15,12 +16,14 @@ material = "1.12.0"
 cardview = "1.0.0"
 mpandroidchart = "3.1.0"
 picasso = "2.8"
+playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 junitKtx = "1.2.1"
 gridlayout = "1.0.0"
 retrofit = "2.9.0"
 
 [libraries]
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-ktx-v160 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
@@ -36,6 +39,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }

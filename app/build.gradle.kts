@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.picasso)
     annotationProcessor(libs.compiler)
     implementation(libs.androidx.core.ktx.v160)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.google.material.v180)
 
 }
 

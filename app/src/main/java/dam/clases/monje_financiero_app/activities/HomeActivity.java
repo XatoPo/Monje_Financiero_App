@@ -185,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
                 // Lógica para mostrar guía
                 return true;
             } else if (id == R.id.menu_office_location) {
-                // Lógica para mostrar ubicación de oficinas
+                startActivity(new Intent(HomeActivity.this, LocationActivity.class));
                 return true;
             } else if (id == R.id.menu_logout) {
                 SharedPreferences sharedPreferences = getSharedPreferences("MonjeFinancieroPrefs", MODE_PRIVATE);
