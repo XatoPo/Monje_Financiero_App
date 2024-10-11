@@ -2,19 +2,17 @@ package dam.clases.monje_financiero_app.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dam.clases.monje_financiero_app.R
-import dam.clases.monje_financiero_app.models.Budget
 import dam.clases.monje_financiero_app.models.Category
 import dam.clases.monje_financiero_app.services.BudgetsService
 import okhttp3.Call
@@ -48,7 +46,7 @@ class BudgetsActivity : AppCompatActivity() {
         radioGroupBudgetPeriod = findViewById(R.id.radioGroupBudgetPeriod)
 
         // Obtener el userId de SharedPreferences
-        val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MonjeFinancieroPrefs", MODE_PRIVATE)
         userId = sharedPreferences.getString("user_id", null)
 
         budgetsService = BudgetsService(this)
@@ -59,6 +57,38 @@ class BudgetsActivity : AppCompatActivity() {
 
         btnSaveBudget.setOnClickListener {
             validateAndSaveBudget()
+        }
+
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_budgets
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.navigation_expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    true
+                }
+                R.id.navigation_budgets -> {
+                    startActivity(Intent(this, BudgetsActivity::class.java))
+                    true
+                }
+                R.id.navigation_reports -> {
+                    startActivity(Intent(this, ReportsActivity::class.java))
+                    true
+                }
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -81,7 +111,7 @@ class BudgetsActivity : AppCompatActivity() {
         val budgetName = etBudgetName.text.toString().trim()
         val budgetAmountStr = etBudgetAmount.text.toString().trim()
 
-        // Validaciones
+        // Validación del nombre del presupuesto
         if (budgetName.isEmpty()) {
             inputLayoutBudgetName.error = "El nombre del presupuesto es obligatorio"
             return
@@ -89,18 +119,45 @@ class BudgetsActivity : AppCompatActivity() {
             inputLayoutBudgetName.error = null // Limpiar el error
         }
 
+        // Validación del monto del presupuesto
         if (budgetAmountStr.isEmpty()) {
             inputLayoutBudgetAmount.error = "El monto límite es obligatorio"
             return
         } else {
+            try {
+                val budgetAmount = budgetAmountStr.toDouble()
+                if (budgetAmount <= 0) {
+                    inputLayoutBudgetAmount.error = "El monto debe ser mayor a cero"
+                    return
+                }
+            } catch (e: NumberFormatException) {
+                inputLayoutBudgetAmount.error = "Por favor, ingresa un número válido"
+                return
+            }
             inputLayoutBudgetAmount.error = null // Limpiar el error
         }
 
-        val budgetAmount = budgetAmountStr.toDouble()
-        val period = getSelectedBudgetPeriod()
+        // Verificar que el userId no sea nulo
+        if (userId == null) {
+            Toast.makeText(this, "Error: Usuario no encontrado. Inicia sesión nuevamente.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        // Crear el objeto Budget
-        val budget = Budget(null.toString(), userId!!, budgetName, budgetAmount, selectedCategoryId!!, period)
+        // Validación de la categoría seleccionada
+        if (selectedCategoryId == null) {
+            Toast.makeText(this, "Selecciona una categoría", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Validación del periodo del presupuesto
+        val period = getSelectedBudgetPeriod()
+        if (period.isEmpty()) {
+            Toast.makeText(this, "Selecciona un período de tiempo", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Crear el objeto Budget y enviar los datos al servicio
+        val budgetAmount = budgetAmountStr.toDouble()
         budgetsService.addBudget(userId!!, budgetName, budgetAmount, selectedCategoryId!!, period, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
@@ -112,6 +169,11 @@ class BudgetsActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     runOnUiThread {
                         Toast.makeText(this@BudgetsActivity, "Presupuesto guardado exitosamente", Toast.LENGTH_SHORT).show()
+                        // Limpiar los campos después de guardar
+                        etBudgetName.setText("")
+                        etBudgetAmount.setText("")
+                        btnSelectCategory.text = "Seleccionar categoría"
+                        radioGroupBudgetPeriod.clearCheck()
                     }
                 } else {
                     runOnUiThread {
@@ -125,7 +187,13 @@ class BudgetsActivity : AppCompatActivity() {
     private fun getSelectedBudgetPeriod(): String {
         val selectedId = radioGroupBudgetPeriod.checkedRadioButtonId
         val selectedRadioButton = findViewById<RadioButton>(selectedId)
-        return selectedRadioButton.text.toString() // Devolver el texto del botón seleccionado (semanal, mensual, anual)
+
+        return when (selectedRadioButton?.text.toString()) {
+            "Semanal" -> "weekly"
+            "Mensual" -> "monthly"
+            "Anual" -> "yearly"
+            else -> "" // O un valor por defecto que manejes
+        }
     }
 
     companion object {
