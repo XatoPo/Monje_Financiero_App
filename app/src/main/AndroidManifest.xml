@@ -20,6 +20,7 @@
         android:roundIcon="@drawable/ic_monje_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Monje_Financiero_App"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <!-- Actividad de inicio de sesión -->
