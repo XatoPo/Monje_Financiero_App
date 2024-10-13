@@ -2,15 +2,13 @@ package dam.clases.monje_financiero_app.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.GridLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.models.Category
 import dam.clases.monje_financiero_app.services.CategoriesService
@@ -21,18 +19,26 @@ import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
 
-class CategorySelectionActivity : AppCompatActivity() {
+class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryClickListener {
     private lateinit var btnClose: Button
+    private lateinit var recyclerViewCategories: RecyclerView
+    private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoriesService: CategoriesService
-    private lateinit var gridLayoutCategories: GridLayout
     private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_category_selection)
 
-        gridLayoutCategories = findViewById(R.id.gridLayoutCategories)
+        recyclerViewCategories = findViewById(R.id.recyclerViewCategories)
         btnClose = findViewById(R.id.btnClose)
+
+        categoryAdapter = CategoryAdapter(this, this)
+        recyclerViewCategories.adapter = categoryAdapter
+
+        // Usar GridLayoutManager con 2 columnas
+        val layoutManager = GridLayoutManager(this, 2)
+        recyclerViewCategories.layoutManager = layoutManager
 
         categoriesService = CategoriesService(this)
 
@@ -64,16 +70,10 @@ class CategorySelectionActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    Log.d("CategorySelectionActivity", "Response Body: $responseBody")
-
                     try {
-                        // Parsear la respuesta como JSONArray
                         val jsonArray = JSONArray(responseBody)
-
-                        // Obtener el primer elemento que es un JSONArray de categorías
                         val categoriesJsonArray = jsonArray.getJSONArray(0)
 
-                        // Verificar si el array de categorías está vacío
                         if (categoriesJsonArray.length() == 0) {
                             runOnUiThread {
                                 Toast.makeText(this@CategorySelectionActivity, "No se encontraron categorías", Toast.LENGTH_SHORT).show()
@@ -91,7 +91,7 @@ class CategorySelectionActivity : AppCompatActivity() {
                                     color = categoryJson.getString("color"),
                                     iconText = categoryJson.getString("icon_text")
                                 )
-                                addCategoryToView(category)
+                                categoryAdapter.addCategory(category)
                             }
                         }
                     } catch (e: JSONException) {
@@ -109,54 +109,11 @@ class CategorySelectionActivity : AppCompatActivity() {
         })
     }
 
-    private fun addCategoryToView(category: Category) {
-        // Inflar el layout de la categoría
-        val categoryView = layoutInflater.inflate(R.layout.category_item, null)
-
-        // Obtener referencias a los elementos del layout
-        val iconTextView = categoryView.findViewById<TextView>(R.id.iconText)
-        val categoryNameTextView = categoryView.findViewById<TextView>(R.id.categoryName)
-
-        // Crear un GradientDrawable
-        val drawable = GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = 16f // Radio de los bordes redondeados
-            setStroke(1, Color.DKGRAY) // Color del borde
-            val originalColor = Color.parseColor(category.color)
-            val alpha = (0.8 * 255).toInt() // 80% opacidad
-            setColor((alpha shl 24) or (originalColor and 0x00FFFFFF)) // Color de fondo con opacidad
+    override fun onCategoryClicked(category: Category) {
+        val resultIntent = Intent().apply {
+            putExtra("selectedCategory", category) // Pasar la categoría como Parcelable
         }
-
-        // Aplicar el Drawable al fondo del categoryView
-        categoryView.background = drawable
-
-        // Establecer el icono y el nombre
-        iconTextView.text = category.iconText
-        categoryNameTextView.text = category.name
-
-        // Cambiar el color del texto a negro
-        iconTextView.setTextColor(Color.BLACK)
-        categoryNameTextView.setTextColor(Color.BLACK)
-
-        // Establecer el click listener
-        categoryView.setOnClickListener {
-            val resultIntent = Intent().apply {
-                putExtra("selectedCategory", category) // Pasar la categoría como Parcelable
-            }
-            setResult(Activity.RESULT_OK, resultIntent)
-            finish() // Cerrar el diálogo
-        }
-
-        // Crear LayoutParams para el espaciado
-        val params = GridLayout.LayoutParams()
-        params.setMargins(8, 8, 8, 8) // Margen de 8dp en todos los lados
-        params.width = 0 // Ancho flexible
-        params.height = GridLayout.LayoutParams.WRAP_CONTENT // Alto adaptable
-        params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // Ocupa toda la fila
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // Ocupa toda la columna
-        categoryView.layoutParams = params
-
-        // Añadir la vista al GridLayout principal
-        gridLayoutCategories.addView(categoryView)
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish() // Cerrar la actividad y devolver la categoría seleccionada
     }
 }

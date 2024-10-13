@@ -13,25 +13,14 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewTitle"
         android:layout_above="@+id/btnClose"
-        android:fillViewport="true">
-
-        <GridLayout
-            android:id="@+id/gridLayoutCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:padding="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center">
-        </GridLayout>
-
-    </ScrollView>
+        android:fillViewport="true"
+        android:layout_marginTop="8dp"/>
 
     <Button
         android:id="@+id/btnClose"
