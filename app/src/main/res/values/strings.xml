@@ -2,4 +2,5 @@
     <string name="app_name">Monje Financiero</string>
     <string name="google_maps_key">AIzaSyAL88nxNd2v5n3E90RTl5WTXsJJJAMG21E</string>
     <string name="centrar_en_ubicaci_n">Centrar en ubicación</string>
+    <string name="title_activity_dot_lottie_animation">DotLottieAnimation</string>
 </resources>

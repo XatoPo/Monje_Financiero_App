@@ -25,6 +25,7 @@ class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryC
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoriesService: CategoriesService
     private var userId: String? = null
+    private lateinit var loadingDialog: ALoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryC
 
         // Cargar las categorías desde la base de datos
         if (userId != null) {
+            showLoadingDialog() // Mostrar el diálogo de carga
             loadCategories(userId!!)
         } else {
             Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show()
@@ -59,10 +61,16 @@ class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryC
         }
     }
 
+    private fun showLoadingDialog() {
+        loadingDialog = ALoadingDialog(this) // Inicializar el diálogo de carga
+        loadingDialog.show() // Mostrar el diálogo
+    }
+
     private fun loadCategories(userId: String) {
         categoriesService.getAllCategories(userId, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
+                    loadingDialog.dismiss() // Ocultar el diálogo de carga
                     Toast.makeText(this@CategorySelectionActivity, "Error al cargar categorías", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -76,6 +84,7 @@ class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryC
 
                         if (categoriesJsonArray.length() == 0) {
                             runOnUiThread {
+                                loadingDialog.dismiss() // Ocultar el diálogo de carga
                                 Toast.makeText(this@CategorySelectionActivity, "No se encontraron categorías", Toast.LENGTH_SHORT).show()
                             }
                             return
@@ -93,15 +102,18 @@ class CategorySelectionActivity : AppCompatActivity(), CategoryAdapter.CategoryC
                                 )
                                 categoryAdapter.addCategory(category)
                             }
+                            loadingDialog.dismiss() // Ocultar el diálogo de carga después de cargar las categorías
                         }
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         runOnUiThread {
+                            loadingDialog.dismiss() // Ocultar el diálogo de carga
                             Toast.makeText(this@CategorySelectionActivity, "Error al procesar la respuesta del servidor", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
                     runOnUiThread {
+                        loadingDialog.dismiss() // Ocultar el diálogo de carga
                         Toast.makeText(this@CategorySelectionActivity, "Error al obtener categorías del servidor", Toast.LENGTH_SHORT).show()
                     }
                 }

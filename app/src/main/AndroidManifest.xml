@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permisos necesarios para acceso a internet -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <!-- Permisos para acceder a la ubicación -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" /> <!-- Permisos para acceder a la ubicación -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -22,41 +21,30 @@
         android:theme="@style/Theme.Monje_Financiero_App"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activities.DotLottieAnimation"
+            android:exported="false"
+            android:label="@string/title_activity_dot_lottie_animation"
+            android:theme="@style/Theme.Monje_Financiero_App" />
         <!-- Actividad de inicio de sesión -->
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Actividad de registro de usuario -->
-        <activity android:name=".activities.RegisterActivity" />
-
-        <!-- Actividad de inicio o home -->
-        <activity android:name=".activities.HomeActivity" />
-
-        <!-- Actividad de configuración de perfil -->
-        <activity android:name=".activities.ProfileSettingsActivity" />
-
-        <!-- Actividades de finanzas -->
+        </activity> <!-- Actividad de registro de usuario -->
+        <activity android:name=".activities.RegisterActivity" /> <!-- Actividad de inicio o home -->
+        <activity android:name=".activities.HomeActivity" /> <!-- Actividad de configuración de perfil -->
+        <activity android:name=".activities.ProfileSettingsActivity" /> <!-- Actividades de finanzas -->
         <activity android:name=".activities.BudgetsActivity" />
         <activity android:name=".activities.ExpensesActivity" />
-        <activity android:name=".activities.CategoriesActivity" />
-
-        <!-- Actividad de selección de categoría (para usar en diálogos) -->
-        <activity android:name=".activities.CategorySelectionActivity" />
-
-        <!-- Actividad de generación de reportes -->
-        <activity android:name=".activities.ReportsActivity" />
-
-        <!-- Otras actividades según el flujo de tu aplicación -->
-        <activity android:name=".activities.LocationActivity" />
-
-        <!-- Clave de API de Google Maps -->
+        <activity android:name=".activities.CategoriesActivity" /> <!-- Actividad de selección de categoría (para usar en diálogos) -->
+        <activity android:name=".activities.CategorySelectionActivity" /> <!-- Actividad de generación de reportes -->
+        <activity android:name=".activities.ReportsActivity" /> <!-- Otras actividades según el flujo de tu aplicación -->
+        <activity android:name=".activities.LocationActivity" /> <!-- Clave de API de Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
