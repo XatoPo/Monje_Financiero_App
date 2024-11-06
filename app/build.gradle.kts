@@ -80,8 +80,9 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.google.material.v180)
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    implementation(libs.glide.v4120)
+    annotationProcessor(libs.compiler.v4120)
+    implementation(libs.satyan.sugar)
 
 
 }

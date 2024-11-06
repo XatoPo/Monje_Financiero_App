@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -32,9 +33,12 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var radioGroupGender: RadioGroup
     private lateinit var btnSelectDate: Button
     private lateinit var btnRegisterSubmit: Button
+    private lateinit var btnBack: ImageButton
 
     private lateinit var usersService: UsersService
     private var selectedDate: String = ""
+
+    private lateinit var loadingDialog: ALoadingDialog // Agregar el diálogo de carga
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,14 +56,25 @@ class RegisterActivity : AppCompatActivity() {
         radioGroupGender = findViewById(R.id.radioGroupGender)
         btnSelectDate = findViewById(R.id.btnSelectDate)
         btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit)
+        btnBack = findViewById(R.id.btnBack)
 
         usersService = UsersService(this)
+
+        // Inicializar el diálogo de carga
+        loadingDialog = ALoadingDialog(this)
 
         // Configurar el botón de selección de fecha
         btnSelectDate.setOnClickListener { showDatePickerDialog() }
 
         // Configurar el botón de registro
         btnRegisterSubmit.setOnClickListener { registerUser() }
+
+        // Botón para regresar a HomeActivity
+        btnBack.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun showDatePickerDialog() {
@@ -109,15 +124,23 @@ class RegisterActivity : AppCompatActivity() {
             put("profile_image_url", "") // Si hay un campo para la imagen, agregarlo aquí
         }
 
+        // Mostrar el loader antes de realizar la solicitud
+        loadingDialog.show()
+
         // Realizar el registro
         usersService.registerUser(username, email, password, selectedDate, "", object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
+                    loadingDialog.dismiss() // Ocultar el loader en caso de error
                     Toast.makeText(this@RegisterActivity, "Error al registrar el usuario", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
+                runOnUiThread {
+                    loadingDialog.dismiss() // Ocultar el loader cuando la respuesta es recibida
+                }
+
                 if (response.isSuccessful) {
                     runOnUiThread {
                         Toast.makeText(this@RegisterActivity, "Registro exitoso", Toast.LENGTH_SHORT).show()

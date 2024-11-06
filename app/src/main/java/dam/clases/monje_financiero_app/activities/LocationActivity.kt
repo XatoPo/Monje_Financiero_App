@@ -34,9 +34,11 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private val defaultLocation = LatLng(-12.073074, -77.163868) // Ubicación por defecto
+    private lateinit var loadingDialog: ALoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showLoadingDialog()
         setContentView(R.layout.activity_location)
 
         // Obtén el fragmento del mapa y configúralo
@@ -85,6 +87,11 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 else -> false
             }
         }
+    }
+
+    private fun showLoadingDialog() {
+        loadingDialog = ALoadingDialog(this) // Inicializar el diálogo de carga
+        loadingDialog.show() // Mostrar el diálogo
     }
 
     override fun onMapReady(gMap: GoogleMap) {
@@ -146,11 +153,14 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (location != null) {
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+                    loadingDialog.dismiss() // Ocultar el diálogo de carga
                 } else {
+                    loadingDialog.dismiss() // Ocultar el diálogo de carga
                     moveToDefaultLocation()
                 }
             }
         } catch (e: SecurityException) {
+            loadingDialog.dismiss() // Ocultar el diálogo de carga
             e.printStackTrace()
         }
     }
@@ -163,17 +173,21 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (location != null) {
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f))
+                    loadingDialog.dismiss() // Ocultar el diálogo de carga
                 } else {
+                    loadingDialog.dismiss() // Ocultar el diálogo de carga
                     moveToDefaultLocation()
                 }
             }
         } catch (e: SecurityException) {
+            loadingDialog.dismiss() // Ocultar el diálogo de carga
             e.printStackTrace()
         }
     }
 
     private fun moveToDefaultLocation() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f))
+        loadingDialog.dismiss() // Ocultar el diálogo de carga
         Toast.makeText(this, "No se pudo obtener la ubicación actual. Mostrando ubicación por defecto.", Toast.LENGTH_SHORT).show()
     }
 

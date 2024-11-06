@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Objects;
+
 import dam.clases.monje_financiero_app.R;
 
 public class ALoadingDialog extends Dialog {
@@ -23,7 +25,7 @@ public class ALoadingDialog extends Dialog {
         setCancelable(false);
         setOnCancelListener(null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         View view = LayoutInflater.from(context).inflate(R.layout.loader_layout, null);
         setContentView(view);

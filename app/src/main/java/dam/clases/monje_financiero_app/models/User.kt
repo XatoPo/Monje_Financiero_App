@@ -1,5 +1,6 @@
 package dam.clases.monje_financiero_app.models
 
+import com.orm.SugarRecord
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -10,7 +11,8 @@ data class User(
     val password: String,                // User's password
     val dateOfBirth: String,             // User's date of birth (YYYY-MM-DD format)
     val profileImageUrl: String          // URL of the user's profile image
-) : Parcelable {
+) : Parcelable, SugarRecord() { // Agregamos la herencia de SugarRecord
+
     constructor(parcel: Parcel) : this(
         id = parcel.readString() ?: "",
         name = parcel.readString() ?: "",
