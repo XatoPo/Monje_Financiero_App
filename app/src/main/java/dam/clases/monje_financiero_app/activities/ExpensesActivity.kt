@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.models.Expense
 import dam.clases.monje_financiero_app.models.Category
 import dam.clases.monje_financiero_app.services.ExpensesService
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dam.clases.monje_financiero_app.services.ApiService
 import okhttp3.Call
 import okhttp3.Callback
@@ -63,6 +65,38 @@ class ExpensesActivity : AppCompatActivity() {
 
         btnSaveExpense.setOnClickListener {
             validateAndSaveExpense()
+        }
+
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_expenses
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.navigation_expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    true
+                }
+                R.id.navigation_budgets -> {
+                    startActivity(Intent(this, BudgetsActivity::class.java))
+                    true
+                }
+                R.id.navigation_reports -> {
+                    startActivity(Intent(this, ReportsActivity::class.java))
+                    true
+                }
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 
