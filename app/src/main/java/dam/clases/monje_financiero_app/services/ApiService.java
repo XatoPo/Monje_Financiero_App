@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ApiService {
 
-    private static final String BASE_URL = "https://back-monje-financiero-production.up.railway.app/";
+    private static final String BASE_URL = "https://api-node-monje-299345047999.us-central1.run.app/";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
 
