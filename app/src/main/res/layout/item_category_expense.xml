@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Emoji as icon -->
+    <TextView
+        android:id="@+id/category_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="💸"
+        android:textSize="24sp" />
+
+    <!-- Category name -->
+    <TextView
+        android:id="@+id/category_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:text="Categoría"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Total amount -->
+    <TextView
+        android:id="@+id/category_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S/. 0.00"
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:gravity="end"/>
+</LinearLayout>

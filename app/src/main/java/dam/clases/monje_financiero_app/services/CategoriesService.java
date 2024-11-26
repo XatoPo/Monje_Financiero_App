@@ -49,7 +49,7 @@ public class CategoriesService {
     }
 
     public void getAllCategories(String userId, Callback callback) {
-        apiService.get("categories?user_id=" + userId, new Callback() { // Cambia aquí
+        apiService.get("categories?user_id=" + userId, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.onFailure(call, e);

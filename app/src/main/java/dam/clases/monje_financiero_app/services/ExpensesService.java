@@ -5,7 +5,11 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ExpensesService {
 
@@ -39,8 +43,18 @@ public class ExpensesService {
     }
 
     // Método para obtener todos los gastos
-    public void getAllExpenses(Callback callback) {
-        apiService.get("expenses", callback);
+    public void getAllExpenses(String userId, Callback callback) {
+        apiService.get("expenses?user_id=" + userId, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                callback.onResponse(call, response);
+            }
+        });
     }
 
     // Método para actualizar un gasto

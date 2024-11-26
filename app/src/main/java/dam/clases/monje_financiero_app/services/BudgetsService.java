@@ -37,8 +37,18 @@ public class BudgetsService {
     }
 
     // Método para obtener todos los presupuestos
-    public void getAllBudgets(Callback callback) {
-        apiService.get("budgets", callback);
+    public void getAllBudgets(String userId, Callback callback) {
+        apiService.get("budgets?user_id=" + userId, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                callback.onResponse(call, response);
+            }
+        });
     }
 
     // Método para actualizar un presupuesto

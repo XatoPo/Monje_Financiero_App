@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -65,23 +64,28 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
+                    <!-- Mostrar total de Gastos -->
                     <TextView
+                        android:id="@+id/tvTotalGastos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Este mes: $1,234.56"
+                        android:text="Total Gastos: $0.00"
                         android:layout_marginTop="8dp" />
 
                     <TextView
+                        android:id="@+id/tvTotalPresupuestos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Presupuesto: $2,000.00" />
 
+                    <!-- Comparación de presupuestos -->
                     <ProgressBar
+                        android:id="@+id/progressBudgetComparison"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:max="100"
-                        android:progress="62"
+                        android:progress="0"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -108,13 +112,10 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCategories"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/categories_recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <!-- Categorías se agregarán aquí -->
-                    </LinearLayout>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
