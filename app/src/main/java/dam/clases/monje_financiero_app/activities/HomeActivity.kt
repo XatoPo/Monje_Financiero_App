@@ -2,9 +2,10 @@ package dam.clases.monje_financiero_app.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupMenu
@@ -12,12 +13,16 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.services.UsersService
 import dam.clases.monje_financiero_app.services.BudgetsService
+import dam.clases.monje_financiero_app.services.CategoriesService
 import dam.clases.monje_financiero_app.services.ExpensesService
 import okhttp3.Call
 import okhttp3.Callback
@@ -44,15 +49,28 @@ class HomeActivity : AppCompatActivity() {
     private var totalBudgets = 0.0 // Suma de presupuestos
     private var totalExpenses = 0.0 // Suma de gastos
 
+    private lateinit var rvCategories: RecyclerView
+    private lateinit var tvNoData: TextView
+    private lateinit var categoriesAdapter: CategoriesAdapter
+    private lateinit var categoriesService: CategoriesService
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showLoadingDialog()
         setContentView(R.layout.activity_home)
+        rvCategories = findViewById(R.id.rvCategories)
+
+        // Inicializar el adaptador con una lista vacía al principio
+        categoriesAdapter = CategoriesAdapter(mutableListOf())
+        rvCategories.adapter = categoriesAdapter // Ahora el adaptador está inicializado
 
         // Inicializar servicios y variables
         usersService = UsersService(this)
         budgetsService = BudgetsService(this)
         expensesService = ExpensesService(this)
+        categoriesService = CategoriesService(this)
+        rvCategories.layoutManager = LinearLayoutManager(this)
 
         // Inicializar el TextView y botón de perfil
         tvWelcome = findViewById(R.id.tvWelcome)
@@ -60,6 +78,7 @@ class HomeActivity : AppCompatActivity() {
         tvTotalPresupuestos = findViewById(R.id.tvTotalPresupuestos)
         tvTotalGastos = findViewById(R.id.tvTotalGastos)
         progressBudgetComparison = findViewById(R.id.progressBudgetComparison)
+        tvNoData = findViewById(R.id.tvNoData)
 
         // Obtener el userId de SharedPreferences
         val sharedPreferences: SharedPreferences = getSharedPreferences("MonjeFinancieroPrefs", MODE_PRIVATE)
@@ -68,6 +87,16 @@ class HomeActivity : AppCompatActivity() {
         userId?.let {
             loadUserData(it)
             fetchData(it)
+            // Llamamos al método para obtener y procesar los gastos por categoría
+            fetchAndProcessExpensesCategory(it) { isSuccess ->
+                if (isSuccess) {
+                    // El proceso fue exitoso
+                    Toast.makeText(this, "Gastos y categorías procesados correctamente.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Hubo un error
+                    Toast.makeText(this, "Hubo un error al procesar los datos.", Toast.LENGTH_SHORT).show()
+                }
+            }
         } ?: run {
             Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show()
         }
@@ -362,10 +391,36 @@ class HomeActivity : AppCompatActivity() {
                 0
             }
 
+            // Establecer el progreso de la barra
             progressBudgetComparison.progress = progress
+
+            // Cambiar el color de la barra dependiendo de si los gastos superan el presupuesto
+            if (totalExpenses > totalBudgets) {
+                // Exceder presupuesto, color rojo
+                progressBudgetComparison.progressDrawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.progress_bar_over_budget),
+                    PorterDuff.Mode.SRC_IN
+                )
+            } else if (progress >= 80) {
+                // Si el progreso es mayor o igual al 80%, advertir (naranja)
+                progressBudgetComparison.progressDrawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.progress_bar_warning),
+                    PorterDuff.Mode.SRC_IN
+                )
+            } else {
+                // Si está dentro del presupuesto, verde
+                progressBudgetComparison.progressDrawable.setColorFilter(
+                    ContextCompat.getColor(this, R.color.progress_bar_normal),
+                    PorterDuff.Mode.SRC_IN
+                )
+            }
         } else {
-            // Si no hay presupuesto, el progreso es 0
+            // Si no hay presupuesto, el progreso es 0 y no se muestra ningún color
             progressBudgetComparison.progress = 0
+            progressBudgetComparison.progressDrawable.setColorFilter(
+                ContextCompat.getColor(this, R.color.progress_bar_normal),
+                PorterDuff.Mode.SRC_IN
+            )
         }
     }
 
@@ -415,4 +470,152 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, CategoriesActivity::class.java))
         }
     }
+
+    private fun processExpensesForCategory(responseString: String, categories: List<Category>) {
+        try {
+            val jsonArray = JSONArray(responseString)
+            val categoryExpenseMap = mutableMapOf<String, Double>()
+
+            categories.forEach {
+                categoryExpenseMap[it.id] = 0.0
+            }
+
+            if (jsonArray.length() > 0) {
+                val expensesArray = jsonArray.getJSONArray(0)
+                for (i in 0 until expensesArray.length()) {
+                    val expenseObject = expensesArray.getJSONObject(i)
+                    val amount = expenseObject.getString("amount").toDoubleOrNull() ?: 0.0
+                    val categoryId = expenseObject.getString("category_id")
+
+                    categoryExpenseMap[categoryId] = categoryExpenseMap.getOrDefault(categoryId, 0.0) + amount
+                }
+            }
+
+            // Creamos la lista de categorías con los gastos totales
+            val categoriesWithExpenses = categories.map { category ->
+                CategoryWithExpense(
+                    category = category,
+                    totalExpenses = categoryExpenseMap[category.id] ?: 0.0
+                )
+            }
+
+            // Actualizamos la interfaz de usuario
+            runOnUiThread {
+                updateUICategory(categoriesWithExpenses)
+            }
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            runOnUiThread {
+                tvTotalGastos.text = "Error al procesar gastos."
+            }
+        }
+    }
+
+    private fun processCategoriesResponse(responseString: String): List<Category> {
+        val categories = mutableListOf<Category>()
+        try {
+            val jsonArray = JSONArray(responseString)
+
+            if (jsonArray.length() > 0) {
+                val expensesArray = jsonArray.getJSONArray(0)
+                for (i in 0 until expensesArray.length()) {
+                    val categoryObject = expensesArray.getJSONObject(i)
+
+                    // Creamos la categoría a partir del objeto JSON
+                    val category = Category(
+                        id = categoryObject.getString("id"),
+                        name = categoryObject.getString("name"),
+                        emoji = categoryObject.getString("icon_text")
+                    )
+
+                    categories.add(category)
+                }
+            } else {
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "No hay categorías disponibles.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            runOnUiThread {
+                Toast.makeText(applicationContext, "Error al cargar las categorías.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        return categories
+    }
+
+    private fun fetchAndProcessExpensesCategory(userId: String, onResult: (Boolean) -> Unit) {
+        categoriesService.getAllCategories(userId, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                runOnUiThread { onResult(false) }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val responseString = response.body?.string() ?: ""
+                    val categories = processCategoriesResponse(responseString)
+
+                    // Ahora realizamos la solicitud de los gastos
+                    expensesService.getAllExpenses(userId, object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            e.printStackTrace()
+                            runOnUiThread { onResult(false) }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            if (response.isSuccessful) {
+                                val responseString = response.body?.string() ?: ""
+                                processExpensesForCategory(responseString, categories)
+
+                                // Llamamos a onResult(true) cuando ambas solicitudes fueron exitosas
+                                runOnUiThread { onResult(true) }
+                            } else {
+                                runOnUiThread { onResult(false) }
+                            }
+                        }
+                    })
+                } else {
+                    runOnUiThread { onResult(false) }
+                }
+            }
+        })
+    }
+
+    private fun updateUICategory(categoriesWithExpenses: List<CategoryWithExpense>) {
+        Log.d("HomeActivity", "Actualizando categorías, total: ${categoriesWithExpenses.size}")
+
+        // Asegúrate de que el adaptador tiene los datos actualizados
+        categoriesAdapter.updateCategories(categoriesWithExpenses)
+
+        // Si tienes otros elementos de la UI que necesitas actualizar, hazlo aquí
+        val totalExpenses = categoriesWithExpenses.sumOf { it.totalExpenses }
+        Log.d("HomeActivity", "Total de gastos: $totalExpenses")
+
+        // Mostrar el total de gastos
+        tvTotalGastos.text = "Total Gastos: S/. ${"%.2f".format(totalExpenses)}"
+
+        // Validación: Si no hay gastos, mostrar mensaje de error
+        if (totalExpenses == 0.0) {
+            tvNoData.visibility = View.VISIBLE // Mostrar mensaje de error
+            rvCategories.visibility = View.GONE  // Ocultar el RecyclerView de categorías
+        } else {
+            tvNoData.visibility = View.GONE  // Ocultar mensaje de error
+            rvCategories.visibility = View.VISIBLE // Mostrar el RecyclerView
+        }
+    }
+
+    data class CategoryWithExpense(
+        val category: Category,
+        val totalExpenses: Double
+    )
+
+    data class Category(
+        val id: String,
+        val name: String,
+        val emoji: String // Agregamos el campo emoji
+    )
+
 }

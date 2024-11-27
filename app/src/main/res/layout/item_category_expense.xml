@@ -9,7 +9,7 @@
 
     <!-- Emoji as icon -->
     <TextView
-        android:id="@+id/category_icon"
+        android:id="@+id/tvCategoryIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:gravity="center"
@@ -18,22 +18,22 @@
 
     <!-- Category name -->
     <TextView
-        android:id="@+id/category_name"
+        android:id="@+id/tvCategoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="8dp"
-        android:text="Categoría"
+        android:text="@string/categor_a"
         android:textSize="16sp"
         android:textStyle="bold" />
 
     <!-- Total amount -->
     <TextView
-        android:id="@+id/category_total"
+        android:id="@+id/tvCategoryExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="S/. 0.00"
+        android:text="@string/s_0_00"
         android:textSize="14sp"
-        android:textColor="#757575"
+        android:textColor="@color/colorPrimaryDark"
         android:gravity="end"/>
 </LinearLayout>

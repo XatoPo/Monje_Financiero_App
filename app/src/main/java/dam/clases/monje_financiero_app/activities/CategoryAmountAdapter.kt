@@ -11,9 +11,9 @@ class CategoryAmountAdapter(private val categoryExpenseMap: Map<String, Double>)
 
     // Vista que va a mostrar cada ítem del RecyclerView
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val categoryIcon: TextView = itemView.findViewById(R.id.category_icon)
-        val categoryName: TextView = itemView.findViewById(R.id.category_name)
-        val categoryTotal: TextView = itemView.findViewById(R.id.category_total)
+        val categoryIcon: TextView = itemView.findViewById(R.id.tvCategoryIcon)
+        val categoryName: TextView = itemView.findViewById(R.id.tvCategoryName)
+        val categoryTotal: TextView = itemView.findViewById(R.id.tvCategoryExpense)
     }
 
     // Crear una nueva vista (item)

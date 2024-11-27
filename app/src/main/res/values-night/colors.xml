@@ -19,4 +19,7 @@
 
     <color name="colorIconActive">#4FD1C5</color> <!-- Verde claro (activo) -->
     <color name="colorIconInactive">#A0AEC0</color> <!-- Gris claro (inactivo) -->
+    <color name="progress_bar_normal">#81C784</color> <!-- Verde claro -->
+    <color name="progress_bar_warning">#FFB74D</color> <!-- Naranja claro -->
+    <color name="progress_bar_over_budget">#EF5350</color> <!-- Rojo claro -->
 </resources>

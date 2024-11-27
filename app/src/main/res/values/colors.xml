@@ -23,4 +23,7 @@
 
     <color name="colorIconActive">#38B2AC</color> <!-- Verde (cuando está activo) -->
     <color name="colorIconInactive">#5B5B5B</color> <!-- Gris (cuando está inactivo) -->
+    <color name="progress_bar_normal">#4CAF50</color> <!-- Verde -->
+    <color name="progress_bar_warning">#FF9800</color> <!-- Naranja -->
+    <color name="progress_bar_over_budget">#F44336</color> <!-- Rojo -->
 </resources>
