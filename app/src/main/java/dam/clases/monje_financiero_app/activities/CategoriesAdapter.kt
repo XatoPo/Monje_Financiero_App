@@ -1,4 +1,4 @@
 package dam.clases.monje_financiero_app.activities
 
-class CategoryAdapter {
+class CategoriesAdapter {
 }
