@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "387410350728",
+    "project_id": "notification-monje-financiero",
+    "storage_bucket": "notification-monje-financiero.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387410350728:android:9ef04ac2b9525b7d2c453d",
+        "android_client_info": {
+          "package_name": "dam.clases.monje_financiero_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkyLlGaRZRs_gxYAtaCMjnnZ5kvqO7GJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
