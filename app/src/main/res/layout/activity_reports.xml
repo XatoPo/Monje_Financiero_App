@@ -8,70 +8,117 @@
     tools:context=".activities.ReportsActivity"
     android:padding="16dp">
 
+    <!-- Botón de Regresar -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_arrow"
+        android:contentDescription="Regresar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/selectableItemBackground" />
+
     <TextView
         android:id="@+id/tvReportsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Generación de Reportes"
+        android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
 
-    <TextView
-        android:id="@+id/tvStartDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fecha inicial"
-        android:layout_marginTop="16dp"
+    <!-- ScrollView para el contenido desplazable -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvReportsTitle"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <CalendarView
-        android:id="@+id/calendarStartDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvStartDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvEndDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fecha final"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarStartDate"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <CalendarView
-        android:id="@+id/calendarEndDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvEndDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChart"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarEndDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:fillViewport="true">
 
-    <Button
-        android:id="@+id/btnGenerateReport"
-        android:layout_width="0dp"
+        <!-- Contenido del formulario dentro del ScrollView -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Etiqueta de fecha inicial -->
+            <TextView
+                android:id="@+id/tvStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha inicial"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Calendario de fecha inicial -->
+            <CalendarView
+                android:id="@+id/calendarStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvStartDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Etiqueta de fecha final -->
+            <TextView
+                android:id="@+id/tvEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha final"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/calendarStartDate"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- Calendario de fecha final -->
+            <CalendarView
+                android:id="@+id/calendarEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvEndDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Gráfico de barras (BarChart) -->
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintTop_toBottomOf="@id/calendarEndDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Botón para generar reporte -->
+            <Button
+                android:id="@+id/btnGenerateReport"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Generar reporte"
+                app:layout_constraintTop_toBottomOf="@id/barChart"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation View que permanece fijo en la parte inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Generar reporte"
-        app:layout_constraintTop_toBottomOf="@id/barChart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_gravity="bottom"
+        app:menu="@menu/menu_bottom_navigation"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
