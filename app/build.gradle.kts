@@ -1,6 +1,9 @@
+// build.gradle (Module: app)
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,7 +51,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -64,6 +66,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     implementation(libs.androidx.cardview)
     implementation(libs.retrofit)
@@ -84,6 +87,8 @@ dependencies {
     annotationProcessor(libs.compiler.v4120)
     implementation(libs.satyan.sugar)
 
-
+    // Firebase dependencies
+    implementation(platform(libs.firebase.bom))  // Esto asegura que las versiones de Firebase sean consistentes
+    implementation(libs.firebase.analytics)     // Agrega el servicio que necesitas, como Analytics
+    implementation(libs.firebase.messaging)
 }
-

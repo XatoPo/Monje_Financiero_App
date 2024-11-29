@@ -20,5 +20,5 @@
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings"
-        android:title="Configuración"/>
+        android:title="Ajustes"/>
 </menu>

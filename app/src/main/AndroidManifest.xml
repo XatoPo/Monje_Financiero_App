@@ -41,6 +41,7 @@
         <activity android:name=".activities.CategorySelectionActivity" /> <!-- Actividad de generación de reportes -->
         <activity android:name=".activities.ReportsActivity" /> <!-- Otras actividades según el flujo de tu aplicación -->
         <activity android:name=".activities.LocationActivity" /> <!-- Clave de API de Google Maps -->
+        <activity android:name=".activities.SettingsActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -50,6 +51,15 @@
         <meta-data
             android:name="VERSION"
             android:value="2" />
-    </application>
 
+        <!-- Configuración de Firebase Messaging -->
+        <!-- Esta es la clave para que Firebase sepa qué servicio manejará los mensajes push -->
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
 </manifest>
