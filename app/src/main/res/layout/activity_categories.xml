@@ -11,8 +11,8 @@
     <!-- Botón de Regresar -->
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="35dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:contentDescription="Regresar"
         android:src="@drawable/ic_back_arrow"

@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- Ícono o texto representativo de la categoría -->
+    <TextView
+        android:id="@+id/tvCategoryIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="😀"
+        android:textSize="24sp"
+        android:background="@drawable/circle_background"
+        android:contentDescription="Icono de Categoría"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Nombre de la categoría -->
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Nombre de Categoría"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnEditCategory"
+        app:layout_constraintStart_toEndOf="@id/tvCategoryIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Botón para editar la categoría -->
+    <ImageButton
+        android:id="@+id/btnEditCategory"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_edit"
+        android:contentDescription="Editar Categoría"
+        android:background="@drawable/ripple_effect"
+        app:layout_constraintEnd_toStartOf="@id/btnDeleteCategory"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Botón para borrar la categoría -->
+    <ImageButton
+        android:id="@+id/btnDeleteCategory"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="Borrar Categoría"
+        android:background="@drawable/ripple_effect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

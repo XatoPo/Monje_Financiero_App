@@ -29,7 +29,6 @@ import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
@@ -455,7 +454,9 @@ class HomeActivity : AppCompatActivity() {
         val btnRegisterExpense: Button = findViewById(R.id.btnRegisterExpense)
         val btnViewBudgets: Button = findViewById(R.id.btnViewBudgets)
         val btnGenerateReport: Button = findViewById(R.id.btnGenerateReport)
+        val btnCreateCategories: Button = findViewById(R.id.btnCreateCategories)
         val btnManageCategories: Button = findViewById(R.id.btnManageCategories)
+
 
         btnRegisterExpense.setOnClickListener {
             startActivity(Intent(this, ExpensesActivity::class.java))
@@ -466,8 +467,11 @@ class HomeActivity : AppCompatActivity() {
         btnGenerateReport.setOnClickListener {
             startActivity(Intent(this, ReportsActivity::class.java))
         }
-        btnManageCategories.setOnClickListener {
+        btnCreateCategories.setOnClickListener {
             startActivity(Intent(this, CategoriesActivity::class.java))
+        }
+        btnManageCategories.setOnClickListener {
+            startActivity(Intent(this, ManageCategoriesActivity::class.java))
         }
     }
 

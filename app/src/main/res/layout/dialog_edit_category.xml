@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Nombre de la categoría -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayoutCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Nombre de la categoría"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCategoryManageName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Selección de colores -->
+    <TextView
+        android:id="@+id/tvCategoryColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar color"
+        android:layout_marginTop="16dp" />
+
+    <HorizontalScrollView
+        android:id="@+id/colorScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/colorContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <!-- Selección de íconos -->
+    <TextView
+        android:id="@+id/tvIconSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar ícono"
+        android:layout_marginTop="16dp" />
+
+    <GridLayout
+        android:id="@+id/gridIcons2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="7"
+        android:padding="8dp" />
+
+</LinearLayout>

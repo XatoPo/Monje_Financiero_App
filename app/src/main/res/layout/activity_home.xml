@@ -163,7 +163,7 @@
                         android:id="@+id/btnViewBudgets"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ver Presupuestos"
+                        android:text="Registrar Presupuestos"
                         android:layout_marginTop="8dp" />
 
                     <Button
@@ -171,6 +171,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Generar Reporte"
+                        android:layout_marginTop="8dp" />
+
+                    <Button
+                        android:id="@+id/btnCreateCategories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Crear Categorías"
                         android:layout_marginTop="8dp" />
 
                     <Button

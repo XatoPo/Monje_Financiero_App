@@ -42,6 +42,7 @@
         <activity android:name=".activities.ReportsActivity" /> <!-- Otras actividades según el flujo de tu aplicación -->
         <activity android:name=".activities.LocationActivity" /> <!-- Clave de API de Google Maps -->
         <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.ManageCategoriesActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
