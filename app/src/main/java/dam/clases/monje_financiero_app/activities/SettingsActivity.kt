@@ -11,6 +11,7 @@ import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.services.ApiService
 import android.content.SharedPreferences
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.Spinner
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import okhttp3.Call
@@ -62,7 +63,7 @@ class SettingsActivity : AppCompatActivity() {
             updateNotificationSettings(isChecked, frequency)
         }
 
-        findViewById<Button>(R.id.btnBack).setOnClickListener {
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             finish()
         }
 
