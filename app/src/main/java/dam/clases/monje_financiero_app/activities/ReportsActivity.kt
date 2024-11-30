@@ -2,17 +2,15 @@ package dam.clases.monje_financiero_app.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.NestedScrollView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.services.ApiService
 import dam.clases.monje_financiero_app.services.CategoriesService
@@ -25,6 +23,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
 import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -73,6 +74,8 @@ class ReportsActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             finish()
         }
+
+        configureBottomNavigation()
     }
 
     private fun showLoadingDialog() {
@@ -169,13 +172,29 @@ class ReportsActivity : AppCompatActivity() {
                 categoryExpenseMap[it.id] = 0.0
             }
 
+            // Convertir las fechas de inicio y fin a objetos Date
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val startDateObj = startDate?.let { dateFormat.parse(it) }
+            val endDateObj = endDate?.let { dateFormat.parse(it) }
+
             if (jsonArray.length() > 0) {
                 val expensesArray = jsonArray.getJSONArray(0)
                 for (i in 0 until expensesArray.length()) {
                     val expenseObject = expensesArray.getJSONObject(i)
-                    val amount = expenseObject.getString("amount").toDoubleOrNull() ?: 0.0
-                    val categoryId = expenseObject.getString("category_id")
-                    categoryExpenseMap[categoryId] = categoryExpenseMap.getOrDefault(categoryId, 0.0) + amount
+
+                    // Obtener la fecha del gasto y convertirla a un objeto Date
+                    val expenseDateString = expenseObject.getString("date")
+                    val expenseDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(expenseDateString)
+
+                    // Verificar si la fecha del gasto está dentro del rango seleccionado
+                    if (expenseDate != null &&
+                        (startDateObj == null || !expenseDate.before(startDateObj)) &&
+                        (endDateObj == null || !expenseDate.after(endDateObj))) {
+
+                        val amount = expenseObject.getString("amount").toDoubleOrNull() ?: 0.0
+                        val categoryId = expenseObject.getString("category_id")
+                        categoryExpenseMap[categoryId] = categoryExpenseMap.getOrDefault(categoryId, 0.0) + amount
+                    }
                 }
             }
 
@@ -274,4 +293,31 @@ class ReportsActivity : AppCompatActivity() {
         val name: String,
         val emoji: String // Agregamos el campo emoji
     )
+
+    private fun configureBottomNavigation() {
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_reports
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.navigation_expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    true
+                }
+                R.id.navigation_budgets -> {
+                    startActivity(Intent(this, BudgetsActivity::class.java))
+                    true
+                }
+                R.id.navigation_reports -> false
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+    }
 }

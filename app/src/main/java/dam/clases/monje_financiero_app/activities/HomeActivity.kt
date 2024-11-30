@@ -428,7 +428,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId = R.id.navigation_home
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> true
+                R.id.navigation_home -> false
                 R.id.navigation_expenses -> {
                     startActivity(Intent(this, ExpensesActivity::class.java))
                     true

@@ -71,33 +71,7 @@ class ExpensesActivity : AppCompatActivity() {
             finish()
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomNavigationView.selectedItemId = R.id.navigation_expenses
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    true
-                }
-                R.id.navigation_expenses -> {
-                    startActivity(Intent(this, ExpensesActivity::class.java))
-                    true
-                }
-                R.id.navigation_budgets -> {
-                    startActivity(Intent(this, BudgetsActivity::class.java))
-                    true
-                }
-                R.id.navigation_reports -> {
-                    startActivity(Intent(this, ReportsActivity::class.java))
-                    true
-                }
-                R.id.navigation_settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                    true
-                }
-                else -> false
-            }
-        }
+        configureBottomNavigation()
     }
 
     private fun showCategorySelectionDialog() {
@@ -224,5 +198,32 @@ class ExpensesActivity : AppCompatActivity() {
 
     companion object {
         private const val CATEGORY_SELECTION_REQUEST_CODE = 1
+    }
+
+    private fun configureBottomNavigation() {
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        bottomNavigationView.selectedItemId = R.id.navigation_expenses
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.navigation_expenses -> false
+                R.id.navigation_budgets -> {
+                    startActivity(Intent(this, BudgetsActivity::class.java))
+                    true
+                }
+                R.id.navigation_reports -> {
+                    startActivity(Intent(this, ReportsActivity::class.java))
+                    true
+                }
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }
