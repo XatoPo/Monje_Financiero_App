@@ -7,6 +7,7 @@
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorCardBackground">#F2F2F2</color>
     <color name="colorIconTint">#FFFFFF</color>
+    <color name="colorIconMenu">#2C7A7B</color>
     <color name="colorError">#E53E3E</color>
     <color name="colorPrimaryVariant">#2C7A7B</color> <!-- Variante más oscura del verde -->
     <color name="colorSecondary">#4299E1</color> <!-- Azul claro -->

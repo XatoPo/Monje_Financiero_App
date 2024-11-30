@@ -71,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-
+        configureBottomNavigation()
     }
 
     private fun loadNotificationSettings() {

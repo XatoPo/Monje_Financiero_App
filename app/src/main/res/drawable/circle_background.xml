@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+    android:shape="rectangle">
 
     <!-- Color de relleno del círculo -->
     <solid android:color="@color/colorCardBackground" />
@@ -9,4 +9,6 @@
     <stroke
         android:width="2dp"
         android:color="@color/colorOnBackground" />
+
+    <corners android:radius="8dp" />
 </shape>
