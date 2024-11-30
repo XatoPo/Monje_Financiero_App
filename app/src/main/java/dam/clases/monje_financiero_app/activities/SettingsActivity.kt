@@ -10,13 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.services.ApiService
 import android.content.SharedPreferences
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageButton
 import android.widget.Spinner
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dam.clases.monje_financiero_app.services.UsersService
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -50,7 +46,6 @@ class SettingsActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerNotificationFrequency.adapter = adapter
 
-
         // Manejo del botón de restablecer configuración
         btnResetSettings.setOnClickListener {
             resetSettings()
@@ -67,7 +62,7 @@ class SettingsActivity : AppCompatActivity() {
             updateNotificationSettings(isChecked, frequency)
         }
 
-        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+        findViewById<Button>(R.id.btnBack).setOnClickListener {
             finish()
         }
 
@@ -112,6 +107,12 @@ class SettingsActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
+                    // Guardar los nuevos valores en las preferencias compartidas
+                    val editor = sharedPreferences.edit()
+                    editor.putBoolean("notifications_enabled", notificationsEnabled)
+                    editor.putString("notification_frequency", frequency)
+                    editor.apply()
+
                     runOnUiThread {
                         Toast.makeText(this@SettingsActivity, "Configuración actualizada", Toast.LENGTH_SHORT).show()
                     }
