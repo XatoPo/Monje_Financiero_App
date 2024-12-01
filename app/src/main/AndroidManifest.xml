@@ -46,6 +46,7 @@
         <activity android:name=".activities.LocationActivity" /> <!-- Clave de API de Google Maps -->
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ManageCategoriesActivity" />
+        <activity android:name=".activities.GuideActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

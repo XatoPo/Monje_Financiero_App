@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
     implementation(libs.androidx.cardview)
     implementation(libs.retrofit)
@@ -86,6 +87,7 @@ dependencies {
     implementation(libs.glide.v4120)
     annotationProcessor(libs.compiler.v4120)
     implementation(libs.satyan.sugar)
+    implementation(libs.exoplayer)
 
     // Firebase dependencies
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))

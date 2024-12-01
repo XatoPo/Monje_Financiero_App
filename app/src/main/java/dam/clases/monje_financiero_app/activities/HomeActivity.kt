@@ -210,7 +210,7 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menu_guide -> {
-                    // Lógica para mostrar guía
+                    startActivity(Intent(this, GuideActivity::class.java))
                     true
                 }
                 R.id.menu_office_location -> {
