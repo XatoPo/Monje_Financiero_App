@@ -2,12 +2,15 @@ package dam.clases.monje_financiero_app.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.messaging.FirebaseMessaging
 import dam.clases.monje_financiero_app.R
 import dam.clases.monje_financiero_app.services.ApiService
 import okhttp3.Call
@@ -15,8 +18,11 @@ import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
-import com.google.firebase.messaging.FirebaseMessaging
-import android.util.Log
+import android.Manifest
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,9 +35,30 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var loadingDialog: ALoadingDialog // Agregamos el diálogo de carga
 
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // Verificar si el dispositivo tiene Android 13 (API 33) o superior
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Verificar si la app tiene el permiso para mostrar notificaciones
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // Si no tiene permiso, solicitarlo
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    PERMISSION_REQUEST_CODE
+                )
+            }
+        }
 
         // Inicializar vistas
         etEmail = findViewById(R.id.etEmail)
@@ -187,5 +214,24 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    // Manejar la respuesta del usuario sobre si concedió o no el permiso
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // El usuario otorgó el permiso
+                Toast.makeText(this, "Permiso de notificaciones concedido", Toast.LENGTH_SHORT).show()
+            } else {
+                // El usuario denegó el permiso
+                Toast.makeText(this, "Permiso de notificaciones denegado", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

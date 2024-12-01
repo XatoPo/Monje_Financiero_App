@@ -45,8 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
-        // Si no tienes un ícono propio, usa uno genérico o añade tu archivo de ícono
-        val notificationIcon = R.drawable.ic_notification  // Asegúrate de que este archivo exista en res/drawable/
+        val notificationIcon = R.drawable.ic_monje_logo
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)

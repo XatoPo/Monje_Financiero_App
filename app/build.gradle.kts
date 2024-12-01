@@ -88,7 +88,8 @@ dependencies {
     implementation(libs.satyan.sugar)
 
     // Firebase dependencies
-    implementation(platform(libs.firebase.bom))  // Esto asegura que las versiones de Firebase sean consistentes
-    implementation(libs.firebase.analytics)     // Agrega el servicio que necesitas, como Analytics
-    implementation(libs.firebase.messaging)
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
 }
